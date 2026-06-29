@@ -1,0 +1,1053 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>思念兔子 💕</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            background: linear-gradient(180deg, #fff0f5 0%, #ffe4ec 30%, #e8f4f8 70%, #d4f0d4 100%);
+            font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* 背景装饰 */
+        .bg-decoration {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .floating-heart {
+            position: absolute;
+            font-size: 18px;
+            animation: floatHeart 8s infinite ease-in-out;
+            opacity: 0.4;
+        }
+
+        @keyframes floatHeart {
+            0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0.3; }
+            25% { opacity: 0.6; }
+            50% { transform: translateY(-30px) rotate(10deg); opacity: 0.4; }
+            75% { opacity: 0.5; }
+        }
+
+        .cloud {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 50px;
+            animation: cloudFloat 25s infinite linear;
+        }
+
+        @keyframes cloudFloat {
+            0% { transform: translateX(-150px); }
+            100% { transform: translateX(calc(100vw + 150px)); }
+        }
+
+        /* 标题区域 */
+        .header {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            padding-top: 25px;
+            padding-bottom: 10px;
+        }
+
+        .title {
+            font-size: 32px;
+            color: #d4788c;
+            font-weight: bold;
+            text-shadow: 2px 2px 8px rgba(212, 120, 140, 0.3);
+            animation: titlePulse 3s ease-in-out infinite;
+        }
+
+        @keyframes titlePulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+        }
+
+        .subtitle {
+            font-size: 14px;
+            color: #b8a0a8;
+            margin-top: 6px;
+            letter-spacing: 2px;
+        }
+
+        /* 游戏主区域 */
+        .game-container {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 500px;
+            height: 420px;
+            margin-top: 10px;
+        }
+
+        /* 草地 */
+        .grass-area {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 100px;
+            background: linear-gradient(to top, #a8d8a0 0%, #c8e8c0 60%, transparent 100%);
+            border-radius: 50% 50% 0 0 / 40px 40px 0 0;
+        }
+
+        .grass-detail {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 30px;
+            background: repeating-linear-gradient(
+                90deg,
+                #90c888 0px,
+                #90c888 3px,
+                #a8d8a0 3px,
+                #a8d8a0 8px
+            );
+            opacity: 0.6;
+        }
+
+        .flower {
+            position: absolute;
+            bottom: 70px;
+            font-size: 22px;
+            animation: flowerSway 3s ease-in-out infinite;
+        }
+
+        @keyframes flowerSway {
+            0%, 100% { transform: rotate(-5deg); }
+            50% { transform: rotate(5deg); }
+        }
+
+        /* 角色容器 */
+        .characters-area {
+            position: absolute;
+            bottom: 40px;
+            width: 100%;
+            height: 300px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            gap: 0;
+        }
+
+        /* 光晕效果 */
+        .glow-effect {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,200,220,0.4) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            left: 50%;
+            transform: translateX(-50%);
+            bottom: 50px;
+        }
+
+        .glow-effect.active {
+            opacity: 1;
+            animation: glowPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes glowPulse {
+            0%, 100% { transform: translateX(-50%) scale(1); opacity: 0.4; }
+            50% { transform: translateX(-50%) scale(1.1); opacity: 0.6; }
+        }
+
+        /* 兔子 */
+        .rabbit-wrapper {
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.5s ease, left 0.5s ease;
+            z-index: 20;
+            left: 0;
+        }
+
+        .rabbit-wrapper:hover {
+            transform: scale(1.05);
+        }
+
+        .rabbit-wrapper:active {
+            transform: scale(0.97);
+        }
+
+        /* 兔子面向右侧（朝向小熊） */
+        .rabbit-wrapper.face-right .rabbit-img {
+            transform: scaleX(-1);
+        }
+
+        /* 兔子靠近小熊 */
+        .rabbit-wrapper.move-close {
+            left: 30px;
+        }
+
+        .rabbit-img {
+            width: 200px;
+            height: 200px;
+            object-fit: contain;
+            filter: drop-shadow(0 8px 20px rgba(0,0,0,0.1));
+            transition: all 0.4s ease;
+        }
+
+        /* 兔子状态动画 */
+        .rabbit-wrapper.state-idle .rabbit-img {
+            animation: rabbitBreathe 3s ease-in-out infinite;
+        }
+
+        @keyframes rabbitBreathe {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-6px); }
+        }
+
+        /* 面向右侧时的呼吸动画 */
+        .rabbit-wrapper.state-idle.face-right .rabbit-img {
+            animation: rabbitBreatheRight 3s ease-in-out infinite;
+        }
+
+        @keyframes rabbitBreatheRight {
+            0%, 100% { transform: scaleX(-1) translateY(0); }
+            50% { transform: scaleX(-1) translateY(-6px); }
+        }
+
+        .rabbit-wrapper.state-happy .rabbit-img {
+            animation: rabbitHappy 0.6s ease-in-out;
+        }
+
+        @keyframes rabbitHappy {
+            0% { transform: scale(1) rotate(0deg); }
+            20% { transform: scale(1.15) rotate(-8deg); }
+            40% { transform: scale(1.1) rotate(8deg); }
+            60% { transform: scale(1.12) rotate(-4deg); }
+            80% { transform: scale(1.05) rotate(2deg); }
+            100% { transform: scale(1) rotate(0deg); }
+        }
+
+        /* 面向右侧时的开心动画 */
+        .rabbit-wrapper.state-happy.face-right .rabbit-img {
+            animation: rabbitHappyRight 0.6s ease-in-out;
+        }
+
+        @keyframes rabbitHappyRight {
+            0% { transform: scaleX(-1) scale(1) rotate(0deg); }
+            20% { transform: scaleX(-1) scale(1.15) rotate(-8deg); }
+            40% { transform: scaleX(-1) scale(1.1) rotate(8deg); }
+            60% { transform: scaleX(-1) scale(1.12) rotate(-4deg); }
+            80% { transform: scaleX(-1) scale(1.05) rotate(2deg); }
+            100% { transform: scaleX(-1) scale(1) rotate(0deg); }
+        }
+
+        .rabbit-wrapper.state-shy .rabbit-img {
+            animation: rabbitShy 2s ease-in-out infinite;
+        }
+
+        @keyframes rabbitShy {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            25% { transform: translateY(-3px) rotate(2deg); }
+            75% { transform: translateY(-3px) rotate(-2deg); }
+        }
+
+        /* 面向右侧时的害羞动画 */
+        .rabbit-wrapper.state-shy.face-right .rabbit-img {
+            animation: rabbitShyRight 2s ease-in-out infinite;
+        }
+
+        @keyframes rabbitShyRight {
+            0%, 100% { transform: scaleX(-1) translateY(0) rotate(0deg); }
+            25% { transform: scaleX(-1) translateY(-3px) rotate(2deg); }
+            75% { transform: scaleX(-1) translateY(-3px) rotate(-2deg); }
+        }
+
+        .rabbit-wrapper.state-cuddle .rabbit-img {
+            animation: rabbitCuddle 2.5s ease-in-out infinite;
+        }
+
+        @keyframes rabbitCuddle {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-4px) rotate(3deg); }
+        }
+
+        /* 面向右侧时的依偎动画 */
+        .rabbit-wrapper.state-cuddle.face-right .rabbit-img {
+            animation: rabbitCuddleRight 2.5s ease-in-out infinite;
+        }
+
+        @keyframes rabbitCuddleRight {
+            0%, 100% { transform: scaleX(-1) translateY(0) rotate(0deg); }
+            50% { transform: scaleX(-1) translateY(-4px) rotate(3deg); }
+        }
+
+        /* 小熊 */
+        .bear-wrapper {
+            position: absolute;
+            right: -220px;
+            bottom: 0;
+            opacity: 0;
+            transition: all 1.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+            z-index: 15;
+        }
+
+        .bear-wrapper.show {
+            right: 20px;
+            opacity: 1;
+        }
+
+        .bear-wrapper.leaving {
+            right: -220px;
+            opacity: 0;
+            transition: all 1s ease-in;
+        }
+
+        .bear-img {
+            width: 180px;
+            height: 180px;
+            object-fit: contain;
+            filter: drop-shadow(0 8px 20px rgba(0,0,0,0.1));
+            transition: all 0.4s ease;
+        }
+
+        /* 小熊状态动画 */
+        .bear-wrapper.state-appear .bear-img {
+            animation: bearWalk 1.2s ease-in-out infinite;
+        }
+
+        @keyframes bearWalk {
+            0%, 100% { transform: translateY(0) rotate(-1deg); }
+            50% { transform: translateY(-5px) rotate(1deg); }
+        }
+
+        .bear-wrapper.state-guard .bear-img {
+            animation: bearGuard 3s ease-in-out infinite;
+        }
+
+        @keyframes bearGuard {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-3px); }
+        }
+
+        .bear-wrapper.state-look .bear-img {
+            animation: bearLook 2.5s ease-in-out infinite;
+        }
+
+        @keyframes bearLook {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            30% { transform: translateY(-2px) rotate(3deg); }
+            70% { transform: translateY(-2px) rotate(3deg); }
+        }
+
+        .bear-wrapper.state-leave .bear-img {
+            animation: bearLeave 1s ease-in-out;
+        }
+
+        @keyframes bearLeave {
+            0% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-5px) rotate(-5deg); }
+            100% { transform: translateY(0) rotate(0deg); }
+        }
+
+        /* 气泡对话 */
+        .speech-bubble {
+            position: absolute;
+            background: white;
+            padding: 10px 16px;
+            border-radius: 18px;
+            font-size: 13px;
+            color: #666;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            opacity: 0;
+            transition: all 0.4s ease;
+            white-space: nowrap;
+            z-index: 30;
+            border: 2px solid #ffe4ec;
+        }
+
+        .speech-bubble::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-top: 12px solid white;
+        }
+
+        .speech-bubble::before {
+            content: '';
+            position: absolute;
+            bottom: -13px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-left: 11px solid transparent;
+            border-right: 11px solid transparent;
+            border-top: 13px solid #ffe4ec;
+        }
+
+        .speech-bubble.show {
+            opacity: 1;
+            transform: translateY(-8px);
+        }
+
+        .rabbit-bubble {
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .rabbit-bubble.show {
+            transform: translateX(-50%) translateY(-8px);
+        }
+
+        .bear-bubble {
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .bear-bubble.show {
+            transform: translateX(-50%) translateY(-8px);
+        }
+
+        /* 爱心特效 */
+        .heart-particle {
+            position: absolute;
+            font-size: 26px;
+            pointer-events: none;
+            animation: heartFloat 2.2s ease-out forwards;
+            z-index: 40;
+        }
+
+        @keyframes heartFloat {
+            0% {
+                opacity: 1;
+                transform: translateY(0) scale(0.4) rotate(0deg);
+            }
+            30% {
+                opacity: 1;
+                transform: translateY(-50px) scale(1.1) rotate(-10deg);
+            }
+            60% {
+                opacity: 0.8;
+                transform: translateY(-100px) scale(1) rotate(5deg);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-160px) scale(0.6) rotate(0deg);
+            }
+        }
+
+        /* 飘落花瓣 */
+        .petal {
+            position: fixed;
+            pointer-events: none;
+            z-index: 5;
+            animation: petalFall 4s linear forwards;
+        }
+
+        @keyframes petalFall {
+            0% {
+                opacity: 1;
+                transform: translateY(0) rotate(0deg) translateX(0);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(400px) rotate(360deg) translateX(50px);
+            }
+        }
+
+        /* 思念按钮 */
+        .miss-btn {
+            position: relative;
+            z-index: 10;
+            margin-top: 10px;
+            padding: 12px 40px;
+            background: linear-gradient(135deg, #f8a5c2 0%, #d4788c 100%);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            font-size: 16px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(212, 120, 140, 0.4);
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        .miss-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(212, 120, 140, 0.5);
+        }
+
+        .miss-btn:active {
+            transform: translateY(0);
+        }
+
+        /* 计数器 */
+        .stats-area {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            margin-top: 15px;
+            padding: 15px 30px;
+            background: rgba(255,255,255,0.6);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.8);
+        }
+
+        .stats-label {
+            font-size: 14px;
+            color: #b8a0a8;
+            margin-bottom: 5px;
+        }
+
+        .stats-number {
+            font-size: 42px;
+            font-weight: bold;
+            color: #d4788c;
+            line-height: 1;
+        }
+
+        .stats-hearts {
+            font-size: 18px;
+            margin-top: 5px;
+            min-height: 28px;
+        }
+
+        /* 提示文字 */
+        .hint-text {
+            position: relative;
+            z-index: 10;
+            margin-top: 12px;
+            font-size: 13px;
+            color: #c8a8b0;
+            animation: hintPulse 2.5s ease-in-out infinite;
+        }
+
+        @keyframes hintPulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        /* 思念记录 */
+        .history-area {
+            position: relative;
+            z-index: 10;
+            margin-top: 15px;
+            margin-bottom: 30px;
+            text-align: center;
+            max-width: 400px;
+            padding: 0 20px;
+        }
+
+        .history-title {
+            font-size: 12px;
+            color: #d4b8c0;
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+        }
+
+        .history-items {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .history-item {
+            background: rgba(255,255,255,0.7);
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 11px;
+            color: #c098a0;
+            border: 1px solid rgba(255,200,210,0.3);
+            animation: itemAppear 0.4s ease-out;
+        }
+
+        @keyframes itemAppear {
+            0% { transform: scale(0.5); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* 底部 */
+        .footer {
+            position: relative;
+            z-index: 10;
+            margin-top: 20px;
+            margin-bottom: 20px;
+            font-size: 11px;
+            color: #d4c0c8;
+        }
+
+        /* 响应式 */
+        @media (max-width: 500px) {
+            .title { font-size: 26px; }
+            .game-container { height: 360px; }
+            .rabbit-img { width: 160px; height: 160px; }
+            .bear-img { width: 140px; height: 140px; }
+            .bear-wrapper.show { right: 5px; }
+            .stats-number { font-size: 36px; }
+            .rabbit-wrapper.move-close { left: 20px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- 背景装饰 -->
+    <div class="bg-decoration" id="bgDecoration"></div>
+
+    <!-- 标题 -->
+    <div class="header">
+        <div class="title">🐰 思念兔子 💕</div>
+        <div class="subtitle">点击小兔子，让TA知道你在想TA</div>
+    </div>
+
+    <!-- 游戏主区域 -->
+    <div class="game-container">
+        <div class="grass-area">
+            <div class="grass-detail"></div>
+        </div>
+
+        <div class="flower" style="left: 15%; animation-delay: 0s;">🌸</div>
+        <div class="flower" style="left: 35%; animation-delay: 1s;">🌼</div>
+        <div class="flower" style="left: 65%; animation-delay: 0.5s;">🌷</div>
+        <div class="flower" style="left: 85%; animation-delay: 1.5s;">🌸</div>
+
+        <div class="characters-area">
+            <!-- 光晕 -->
+            <div class="glow-effect" id="glowEffect"></div>
+
+            <!-- 兔子 -->
+            <div class="rabbit-wrapper state-idle" id="rabbitWrapper">
+                <div class="speech-bubble rabbit-bubble" id="rabbitBubble">我好想你呀~ 💕</div>
+                <img src="rabbit_idle.png" alt="海棠兔" class="rabbit-img" id="rabbitImg">
+            </div>
+
+            <!-- 小熊 -->
+            <div class="bear-wrapper" id="bearWrapper">
+                <div class="speech-bubble bear-bubble" id="bearBubble">我来陪你啦！🧸</div>
+                <img src="bear_appear.png" alt="小熊" class="bear-img" id="bearImg">
+            </div>
+        </div>
+    </div>
+
+    <!-- 按钮 -->
+    <button class="miss-btn" id="missBtn">💌 点我想TA</button>
+
+    <!-- 计数器 -->
+    <div class="stats-area">
+        <div class="stats-label">今天被想念了</div>
+        <div class="stats-number" id="count">0</div>
+        <div class="stats-hearts" id="hearts"></div>
+    </div>
+
+    <!-- 提示 -->
+    <div class="hint-text" id="hint">✨ 点击小兔子或按钮表达思念 ✨</div>
+
+    <!-- 思念记录 -->
+    <div class="history-area">
+        <div class="history-title">💭 思念记录</div>
+        <div class="history-items" id="historyItems"></div>
+    </div>
+
+    <div class="footer">made with 💕 for you</div>
+
+    <script>
+        // 角色图片资源
+        const rabbitImages = {
+            idle: 'rabbit_idle.png',
+            happy: 'rabbit_happy.png',
+            shy: 'rabbit_shy.png',
+            cuddle: 'rabbit_cuddle.png'
+        };
+
+        const bearImages = {
+            appear: 'bear_appear.png',
+            guard: 'bear_guard.png',
+            look: 'bear_look.png',
+            leave: 'bear_leave.png'
+        };
+
+        // DOM 元素
+        const rabbitWrapper = document.getElementById('rabbitWrapper');
+        const rabbitImg = document.getElementById('rabbitImg');
+        const bearWrapper = document.getElementById('bearWrapper');
+        const bearImg = document.getElementById('bearImg');
+        const rabbitBubble = document.getElementById('rabbitBubble');
+        const bearBubble = document.getElementById('bearBubble');
+        const countEl = document.getElementById('count');
+        const heartsEl = document.getElementById('hearts');
+        const hintEl = document.getElementById('hint');
+        const historyItems = document.getElementById('historyItems');
+        const bgDecoration = document.getElementById('bgDecoration');
+        const glowEffect = document.getElementById('glowEffect');
+        const missBtn = document.getElementById('missBtn');
+
+        // 状态变量
+        let count = 0;
+        let bearTimeout = null;
+        let lookTimeout = null;
+        let isBearHere = false;
+        let rabbitState = 'idle';
+        let bearState = '';
+
+        // 预加载图片
+        function preloadImages() {
+            Object.values(rabbitImages).forEach(src => {
+                const img = new Image();
+                img.src = src;
+            });
+            Object.values(bearImages).forEach(src => {
+                const img = new Image();
+                img.src = src;
+            });
+        }
+
+        // 设置兔子状态
+        // faceRight: 是否面向右侧（朝向小熊）
+        // moveClose: 是否靠近小熊
+        function setRabbitState(state, faceRight, moveClose) {
+            rabbitWrapper.className = 'rabbit-wrapper state-' + state;
+            if (faceRight) {
+                rabbitWrapper.classList.add('face-right');
+            }
+            if (moveClose) {
+                rabbitWrapper.classList.add('move-close');
+            }
+            rabbitImg.src = rabbitImages[state];
+            rabbitState = state;
+        }
+
+        // 设置小熊状态
+        function setBearState(state) {
+            bearWrapper.className = 'bear-wrapper show state-' + state;
+            bearImg.src = bearImages[state];
+            bearState = state;
+        }
+
+        // 初始化背景
+        function initBackground() {
+            const heartEmojis = ['💕', '💖', '💗', '💝', '💘', '💓'];
+            for (let i = 0; i < 12; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'floating-heart';
+                heart.textContent = heartEmojis[Math.floor(Math.random() * heartEmojis.length)];
+                heart.style.left = Math.random() * 100 + '%';
+                heart.style.top = Math.random() * 80 + '%';
+                heart.style.animationDelay = Math.random() * 8 + 's';
+                heart.style.fontSize = (14 + Math.random() * 12) + 'px';
+                bgDecoration.appendChild(heart);
+            }
+
+            for (let i = 0; i < 3; i++) {
+                const cloud = document.createElement('div');
+                cloud.className = 'cloud';
+                const width = 80 + Math.random() * 100;
+                cloud.style.width = width + 'px';
+                cloud.style.height = (width * 0.35) + 'px';
+                cloud.style.top = (3 + Math.random() * 20) + '%';
+                cloud.style.animationDuration = (20 + Math.random() * 15) + 's';
+                cloud.style.animationDelay = (i * 7) + 's';
+                bgDecoration.appendChild(cloud);
+            }
+        }
+
+        // 兔子话语（按状态分类）
+        const rabbitWords = {
+            idle: [
+                '我好想你呀~ 💕',
+                '你什么时候来呢... 💭',
+                '今天也在等你 ✨',
+                '耳朵都等耷拉啦 🐰'
+            ],
+            happy: [
+                '你终于来啦！🥰',
+                '见到你超开心！🎉',
+                '眼睛都亮起来啦 ✨',
+                '抱抱~ 🤗',
+                '你是最好的！💖'
+            ],
+            shy: [
+                '小熊来陪我了呢... 🥺',
+                '好害羞呀 💗',
+                '心里暖暖的 🌸',
+                '有你在真好 💕'
+            ],
+            cuddle: [
+                '依偎在一起好幸福 🥰',
+                '不想分开啦 💗',
+                '就这样一直在一起吧 💑',
+                '最温暖的怀抱 🤗'
+            ]
+        };
+
+        // 小熊话语（按状态分类）
+        const bearWords = {
+            appear: [
+                '我来陪你啦！🧸',
+                '兔子让我来看看你 💕',
+                '别担心，我来了 ✨',
+                '一起度过美好时光吧 🌈'
+            ],
+            guard: [
+                '我会一直守护你们 🛡️',
+                '有我在，不孤单 ✨',
+                '安静陪伴就好 💕',
+                '永远在你们身边 🤗'
+            ],
+            look: [
+                '兔子好可爱呀 🥰',
+                '想你们啦！💖',
+                '看着你们就幸福 💗',
+                '最喜欢你们了 💝'
+            ],
+            leave: [
+                '要暂时离开啦... 👋',
+                '下次再见哦 💕',
+                '一直会想你们的 💭',
+                '记得想我呀 🧸'
+            ]
+        };
+
+        // 提示语
+        const hints = [
+            '✨ 点击小兔子表达思念 ✨',
+            '💕 小熊来陪伴兔子啦！',
+            '🥰 你们好甜蜜呀！',
+            '💖 兔子和小熊都被爱包围了！',
+            '💑 这是真爱呀！',
+            '🌟 思念已满溢出来啦！',
+            '💗 每一秒都在想念你~'
+        ];
+
+        // 创建爱心
+        function createHeart(x, y) {
+            const heartEmojis = ['❤️', '💖', '💕', '💗', '💝', '💘', '💓', '💞'];
+            const heart = document.createElement('div');
+            heart.className = 'heart-particle';
+            heart.textContent = heartEmojis[Math.floor(Math.random() * heartEmojis.length)];
+
+            const offsetX = (Math.random() - 0.5) * 100;
+            heart.style.left = (x + offsetX) + 'px';
+            heart.style.top = y + 'px';
+            heart.style.fontSize = (20 + Math.random() * 16) + 'px';
+            document.body.appendChild(heart);
+            setTimeout(() => heart.remove(), 2200);
+        }
+
+        // 创建花瓣
+        function createPetals() {
+            const petals = ['🌸', '🌼', '✨', '💫', '🦋', '🍃'];
+            for (let i = 0; i < 10; i++) {
+                setTimeout(() => {
+                    const p = document.createElement('div');
+                    p.className = 'petal';
+                    p.textContent = petals[Math.floor(Math.random() * petals.length)];
+                    p.style.left = (Math.random() * 100) + '%';
+                    p.style.top = '-30px';
+                    p.style.fontSize = (16 + Math.random() * 14) + 'px';
+                    p.style.animationDuration = (3 + Math.random() * 2) + 's';
+                    document.body.appendChild(p);
+                    setTimeout(() => p.remove(), 5000);
+                }, i * 150);
+            }
+        }
+
+        // 更新历史记录
+        function addHistory() {
+            const now = new Date();
+            const timeStr = now.getHours().toString().padStart(2, '0') + ':' + 
+                           now.getMinutes().toString().padStart(2, '0') + ':' +
+                           now.getSeconds().toString().padStart(2, '0');
+            const item = document.createElement('div');
+            item.className = 'history-item';
+            item.textContent = timeStr;
+            historyItems.insertBefore(item, historyItems.firstChild);
+            if (historyItems.children.length > 10) {
+                historyItems.removeChild(historyItems.lastChild);
+            }
+        }
+
+        // 小熊看向兔子的定时切换
+        function startBearLookCycle() {
+            // 每隔3-5秒，小熊会看向兔子
+            lookTimeout = setInterval(() => {
+                if (!isBearHere) return;
+                setBearState('look');
+                bearBubble.textContent = bearWords.look[Math.floor(Math.random() * bearWords.look.length)];
+                bearBubble.classList.add('show');
+
+                setTimeout(() => {
+                    if (isBearHere) {
+                        setBearState('guard');
+                        bearBubble.classList.remove('show');
+                    }
+                }, 2500);
+            }, 4000 + Math.random() * 2000);
+        }
+
+        // 核心互动函数
+        function triggerMiss(x, y) {
+            count++;
+            countEl.textContent = count;
+
+            // 更新爱心显示
+            let heartStr = '';
+            const fullHearts = Math.min(count, 12);
+            for (let i = 0; i < fullHearts; i++) {
+                heartStr += '💖';
+            }
+            if (count > 12) heartStr += ' +' + (count - 12);
+            heartsEl.textContent = heartStr;
+
+            // 兔子切换到开心状态 - 面向小熊，靠近小熊
+            setRabbitState('happy', true, true);
+
+            // 显示兔子气泡（开心话语）
+            rabbitBubble.textContent = rabbitWords.happy[Math.floor(Math.random() * rabbitWords.happy.length)];
+            rabbitBubble.classList.add('show');
+
+            // 2.5秒后恢复
+            setTimeout(() => {
+                rabbitBubble.classList.remove('show');
+                if (isBearHere) {
+                    // 小熊在时，切换到依偎状态 - 面向小熊，靠近小熊
+                    setRabbitState('cuddle', true, true);
+                } else {
+                    // 小熊不在，恢复idle - 面向左，回原位
+                    setRabbitState('idle', false, false);
+                }
+            }, 2500);
+
+            // 创建爱心
+            const rect = rabbitWrapper.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+            for (let i = 0; i < 6; i++) {
+                setTimeout(() => {
+                    createHeart(centerX, centerY);
+                }, i * 120);
+            }
+
+            // 花瓣效果
+            createPetals();
+
+            // 光晕效果
+            glowEffect.classList.add('active');
+            setTimeout(() => glowEffect.classList.remove('active'), 3000);
+
+            // 小熊互动逻辑
+            if (!isBearHere) {
+                // 小熊出现
+                isBearHere = true;
+                setBearState('appear');
+
+                // 1.2秒后切换到守护状态
+                setTimeout(() => {
+                    if (isBearHere) {
+                        setBearState('guard');
+                        // 兔子切换到依偎状态 - 面向小熊，靠近小熊
+                        setRabbitState('cuddle', true, true);
+                    }
+                }, 1200);
+
+                // 显示小熊气泡
+                setTimeout(() => {
+                    if (isBearHere) {
+                        bearBubble.textContent = bearWords.guard[Math.floor(Math.random() * bearWords.guard.length)];
+                        bearBubble.classList.add('show');
+                    }
+                }, 1500);
+
+                // 启动小熊看向兔子的循环
+                setTimeout(() => {
+                    if (isBearHere) startBearLookCycle();
+                }, 3000);
+
+                // 小熊离开定时器
+                if (bearTimeout) clearTimeout(bearTimeout);
+                bearTimeout = setTimeout(() => {
+                    leaveBear();
+                }, 8000);
+            } else {
+                // 小熊已经在，重置离开时间
+                if (bearTimeout) clearTimeout(bearTimeout);
+                bearTimeout = setTimeout(() => {
+                    leaveBear();
+                }, 8000);
+            }
+
+            // 更新提示
+            const hintIndex = Math.min(Math.floor(count / 3), hints.length - 1);
+            hintEl.textContent = hints[hintIndex];
+
+            // 添加历史记录
+            addHistory();
+        }
+
+        // 小熊离开
+        function leaveBear() {
+            if (!isBearHere) return;
+
+            // 停止看向循环
+            if (lookTimeout) {
+                clearInterval(lookTimeout);
+                lookTimeout = null;
+            }
+
+            // 切换到离开状态
+            setBearState('leave');
+            bearBubble.textContent = bearWords.leave[Math.floor(Math.random() * bearWords.leave.length)];
+            bearBubble.classList.add('show');
+
+            // 兔子恢复idle - 面向左，回原位
+            setRabbitState('idle', false, false);
+            rabbitBubble.textContent = rabbitWords.idle[Math.floor(Math.random() * rabbitWords.idle.length)];
+            rabbitBubble.classList.add('show');
+            setTimeout(() => rabbitBubble.classList.remove('show'), 2500);
+
+            // 1秒后真正离开
+            setTimeout(() => {
+                bearWrapper.classList.add('leaving');
+                bearBubble.classList.remove('show');
+
+                setTimeout(() => {
+                    bearWrapper.classList.remove('show', 'leaving', 'state-leave');
+                    isBearHere = false;
+                }, 1000);
+            }, 1000);
+        }
+
+        // 兔子点击事件
+        rabbitWrapper.addEventListener('click', (e) => {
+            triggerMiss(e.clientX, e.clientY);
+        });
+
+        // 按钮点击事件
+        missBtn.addEventListener('click', (e) => {
+            const rect = rabbitWrapper.getBoundingClientRect();
+            triggerMiss(rect.left + rect.width / 2, rect.top + rect.height / 2);
+        });
+
+        // 初始化
+        preloadImages();
+        initBackground();
+    </script>
+</body>
+</html>
