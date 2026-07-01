@@ -1,0 +1,2473 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>想念兔兔 💕</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            background: #1a1225;
+            font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            overflow-x: hidden;
+            position: relative;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .scene-container {
+            position: relative;
+            width: 100%;
+            max-width: 900px;
+            aspect-ratio: 16/9;
+            margin: 0 auto;
+            overflow: hidden;
+            border-radius: 0 0 20px 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            background: #2a1f3d;
+        }
+        .bg-image {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 1;
+            transition: opacity 1s ease;
+        }
+        .time-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255,255,255,0.85);
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            color: #666;
+            z-index: 15;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255,200,210,0.3);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .window-stars {
+            position: absolute;
+            top: 8%;
+            left: 18%;
+            width: 35%;
+            height: 35%;
+            z-index: 2;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 1s ease;
+        }
+        .window-stars.show { opacity: 1; }
+        .star-twinkle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 0 6px 2px rgba(255,255,255,0.8);
+            animation: starTwinkle 2s infinite ease-in-out;
+        }
+        @keyframes starTwinkle {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.5); }
+        }
+        .lamp-glow {
+            position: absolute;
+            bottom: 28%;
+            left: 2%;
+            width: 240px;
+            height: 240px;
+            background: radial-gradient(circle, rgba(255,245,180,0.55) 0%, rgba(255,225,140,0.25) 45%, transparent 70%);
+            border-radius: 50%;
+            z-index: 2;
+            animation: lampPulse 4s ease-in-out infinite;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.6s ease;
+        }
+        .lamp-glow.show { opacity: 1; }
+        @keyframes lampPulse {
+            0%, 100% { opacity: 0.6; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.1); }
+        }
+        .mushroom-lamp-click {
+            position: absolute;
+            bottom: 32%;
+            left: 4%;
+            width: 160px;
+            height: 200px;
+            z-index: 3;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 50% 50% 40% 40%;
+        }
+        .mushroom-lamp-click:hover {
+            background: rgba(255,255,255,0.05);
+        }
+        .petal {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background: linear-gradient(135deg, #ffb6c1 0%, #ffc0cb 50%, #ffb6c1 100%);
+            border-radius: 50% 0 50% 50%;
+            opacity: 0.8;
+            pointer-events: none;
+            z-index: 3;
+            animation: petalFall linear forwards;
+        }
+        .petal::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            background: rgba(255,182,193,0.5);
+            top: 50%;
+            transform: rotate(45deg);
+        }
+        @keyframes petalFall {
+            0% { opacity: 0.8; transform: translateY(0) rotate(0deg) translateX(0); }
+            100% { opacity: 0; transform: translateY(400px) rotate(720deg) translateX(100px); }
+        }
+        .heart-particle {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            pointer-events: none;
+            z-index: 10;
+            animation: heartFloat 2.5s ease-out forwards;
+        }
+        .heart-particle::before {
+            content: '';
+            position: absolute;
+            width: 12px;
+            height: 20px;
+            background: linear-gradient(135deg, #ff6b9d 0%, #ff8fab 100%);
+            border-radius: 12px 12px 0 0;
+            transform: rotate(-45deg);
+            left: 4px;
+        }
+        .heart-particle::after {
+            content: '';
+            position: absolute;
+            width: 12px;
+            height: 20px;
+            background: linear-gradient(135deg, #ff6b9d 0%, #ff8fab 100%);
+            border-radius: 12px 12px 0 0;
+            transform: rotate(45deg);
+            left: 10px;
+        }
+        @keyframes heartFloatLeft {
+            0% { opacity: 1; transform: translate(0, 0) scale(0.5) rotate(0deg); }
+            30% { opacity: 1; transform: translate(-40px, -60px) scale(1.2) rotate(-15deg); }
+            60% { opacity: 0.8; transform: translate(-70px, -120px) scale(1) rotate(-30deg); }
+            100% { opacity: 0; transform: translate(-100px, -180px) scale(0.6) rotate(-45deg); }
+        }
+        @keyframes heartFloatRight {
+            0% { opacity: 1; transform: translate(0, 0) scale(0.5) rotate(0deg); }
+            30% { opacity: 1; transform: translate(40px, -60px) scale(1.2) rotate(15deg); }
+            60% { opacity: 0.8; transform: translate(70px, -120px) scale(1) rotate(30deg); }
+            100% { opacity: 0; transform: translate(100px, -180px) scale(0.6) rotate(45deg); }
+        }
+        @keyframes heartFloatCenter {
+            0% { opacity: 1; transform: translate(0, 0) scale(0.5) rotate(0deg); }
+            30% { opacity: 1; transform: translate(0, -80px) scale(1.3) rotate(0deg); }
+            60% { opacity: 0.8; transform: translate(0, -150px) scale(1) rotate(0deg); }
+            100% { opacity: 0; transform: translate(0, -220px) scale(0.6) rotate(0deg); }
+        }
+        @keyframes heartFloatLeftUp {
+            0% { opacity: 1; transform: translate(0, 0) scale(0.5) rotate(0deg); }
+            30% { opacity: 1; transform: translate(-60px, -40px) scale(1.1) rotate(-20deg); }
+            60% { opacity: 0.8; transform: translate(-100px, -90px) scale(0.9) rotate(-40deg); }
+            100% { opacity: 0; transform: translate(-140px, -140px) scale(0.5) rotate(-60deg); }
+        }
+        @keyframes heartFloatRightUp {
+            0% { opacity: 1; transform: translate(0, 0) scale(0.5) rotate(0deg); }
+            30% { opacity: 1; transform: translate(60px, -40px) scale(1.1) rotate(20deg); }
+            60% { opacity: 0.8; transform: translate(100px, -90px) scale(0.9) rotate(40deg); }
+            100% { opacity: 0; transform: translate(140px, -140px) scale(0.5) rotate(60deg); }
+        }
+        .sparkle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 0 8px 2px rgba(255,255,255,0.6);
+            pointer-events: none;
+            z-index: 4;
+            animation: sparkleFade 3s ease-out forwards;
+        }
+        @keyframes sparkleFade {
+            0% { opacity: 1; transform: scale(1); }
+            100% { opacity: 0; transform: scale(0) translateY(-50px); }
+        }
+        .characters-area {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 5;
+            pointer-events: none;
+        }
+        .rabbit-wrapper {
+            position: absolute;
+            bottom: 8%;
+            left: 50%;
+            transform: translateX(-50%);
+            cursor: pointer;
+            transition: all 0.5s ease;
+            z-index: 10;
+            pointer-events: auto;
+        }
+        .rabbit-wrapper:hover { transform: translateX(-50%) scale(1.05); }
+        .rabbit-wrapper:active { transform: translateX(-50%) scale(0.97); }
+        .rabbit-wrapper.face-right {
+            transform: translateX(-90%) scale(1.05);
+        }
+        .rabbit-wrapper.face-right:active {
+            transform: translateX(-90%) scale(0.97);
+        }
+        .rabbit-img {
+            width: 160px;
+            height: 160px;
+            object-fit: contain;
+            filter: drop-shadow(0 4px 12px rgba(0,0,0,0.2));
+            transition: all 0.4s ease;
+        }
+        .rabbit-wrapper.face-right .rabbit-img {
+            transform: scaleX(-1);
+        }
+        .rabbit-wrapper.state-idle .rabbit-img {
+            animation: rabbitBreathe 3s ease-in-out infinite;
+        }
+        @keyframes rabbitBreathe {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+        .rabbit-wrapper.state-idle.face-right .rabbit-img {
+            animation: rabbitBreatheRight 3s ease-in-out infinite;
+        }
+        @keyframes rabbitBreatheRight {
+            0%, 100% { transform: scaleX(-1) translateY(0); }
+            50% { transform: scaleX(-1) translateY(-5px); }
+        }
+        .rabbit-wrapper.state-happy .rabbit-img {
+            animation: rabbitHappy 0.6s ease-in-out;
+        }
+        @keyframes rabbitHappy {
+            0% { transform: scale(1) rotate(0deg); }
+            20% { transform: scale(1.15) rotate(-8deg); }
+            40% { transform: scale(1.1) rotate(8deg); }
+            60% { transform: scale(1.12) rotate(-4deg); }
+            80% { transform: scale(1.05) rotate(2deg); }
+            100% { transform: scale(1) rotate(0deg); }
+        }
+        .rabbit-wrapper.state-happy.face-right .rabbit-img {
+            animation: rabbitHappyRight 0.6s ease-in-out;
+        }
+        @keyframes rabbitHappyRight {
+            0% { transform: scaleX(-1) scale(1) rotate(0deg); }
+            20% { transform: scaleX(-1) scale(1.15) rotate(-8deg); }
+            40% { transform: scaleX(-1) scale(1.1) rotate(8deg); }
+            60% { transform: scaleX(-1) scale(1.12) rotate(-4deg); }
+            80% { transform: scaleX(-1) scale(1.05) rotate(2deg); }
+            100% { transform: scaleX(-1) scale(1) rotate(0deg); }
+        }
+        .rabbit-wrapper.state-shy .rabbit-img {
+            animation: rabbitShy 2s ease-in-out infinite;
+        }
+        @keyframes rabbitShy {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            25% { transform: translateY(-3px) rotate(2deg); }
+            75% { transform: translateY(-3px) rotate(-2deg); }
+        }
+        .rabbit-wrapper.state-shy.face-right .rabbit-img {
+            animation: rabbitShyRight 2s ease-in-out infinite;
+        }
+        @keyframes rabbitShyRight {
+            0%, 100% { transform: scaleX(-1) translateY(0) rotate(0deg); }
+            25% { transform: scaleX(-1) translateY(-3px) rotate(2deg); }
+            75% { transform: scaleX(-1) translateY(-3px) rotate(-2deg); }
+        }
+        .rabbit-wrapper.state-cuddle .rabbit-img {
+            animation: rabbitCuddle 2.5s ease-in-out infinite;
+        }
+        @keyframes rabbitCuddle {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-4px) rotate(3deg); }
+        }
+        .rabbit-wrapper.state-cuddle.face-right .rabbit-img {
+            animation: rabbitCuddleRight 2.5s ease-in-out infinite;
+        }
+        @keyframes rabbitCuddleRight {
+            0%, 100% { transform: scaleX(-1) translateY(0) rotate(0deg); }
+            50% { transform: scaleX(-1) translateY(-4px) rotate(3deg); }
+        }
+        .rabbit-wrapper.state-eating .rabbit-img {
+            animation: rabbitEating 1.2s ease-in-out infinite;
+        }
+        @keyframes rabbitEating {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            25% { transform: translateY(-3px) rotate(2deg); }
+            50% { transform: translateY(0) rotate(0deg); }
+            75% { transform: translateY(-2px) rotate(-2deg); }
+        }
+        .rabbit-wrapper.state-eating.face-right .rabbit-img {
+            animation: rabbitEatingRight 1.2s ease-in-out infinite;
+        }
+        @keyframes rabbitEatingRight {
+            0%, 100% { transform: scaleX(-1) translateY(0) rotate(0deg); }
+            25% { transform: scaleX(-1) translateY(-3px) rotate(2deg); }
+            50% { transform: scaleX(-1) translateY(0) rotate(0deg); }
+            75% { transform: scaleX(-1) translateY(-2px) rotate(-2deg); }
+        }
+        .bear-wrapper {
+            position: absolute;
+            bottom: 8%;
+            right: -150px;
+            opacity: 0;
+            transition: all 1.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+            z-index: 9;
+            pointer-events: none;
+        }
+        .bear-wrapper.show {
+            right: 30%;
+            opacity: 1;
+        }
+        .bear-wrapper.leaving {
+            right: -150px;
+            opacity: 0;
+            transition: all 1s ease-in;
+        }
+        .bear-img {
+            width: 160px;
+            height: 160px;
+            object-fit: contain;
+            filter: drop-shadow(0 4px 12px rgba(0,0,0,0.2));
+            transition: all 0.4s ease;
+        }
+        .bear-wrapper.state-appear .bear-img {
+            animation: bearWalk 1.2s ease-in-out infinite;
+        }
+        @keyframes bearWalk {
+            0%, 100% { transform: translateY(0) rotate(-1deg); }
+            50% { transform: translateY(-5px) rotate(1deg); }
+        }
+        .bear-wrapper.state-guard .bear-img {
+            animation: bearGuard 3s ease-in-out infinite;
+        }
+        @keyframes bearGuard {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-3px); }
+        }
+        .bear-wrapper.state-look .bear-img {
+            animation: bearLook 2.5s ease-in-out infinite;
+        }
+        @keyframes bearLook {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            30% { transform: translateY(-2px) rotate(3deg); }
+            70% { transform: translateY(-2px) rotate(3deg); }
+        }
+        .bear-wrapper.state-leave .bear-img {
+            animation: bearLeave 1s ease-in-out;
+        }
+        @keyframes bearLeave {
+            0% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-5px) rotate(-5deg); }
+            100% { transform: translateY(0) rotate(0deg); }
+        }
+        .speech-bubble {
+            position: absolute;
+            background: white;
+            padding: 8px 14px;
+            border-radius: 16px;
+            font-size: 12px;
+            color: #666;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            opacity: 0;
+            transition: all 0.4s ease;
+            white-space: nowrap;
+            z-index: 20;
+            border: 2px solid #ffe4ec;
+            pointer-events: none;
+        }
+        .speech-bubble::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-top: 10px solid white;
+        }
+        .speech-bubble::before {
+            content: '';
+            position: absolute;
+            bottom: -11px;
+            border-left: 9px solid transparent;
+            border-right: 9px solid transparent;
+            border-top: 11px solid #ffe4ec;
+        }
+        .speech-bubble.show {
+            opacity: 1;
+        }
+        .rabbit-bubble {
+            top: -55px;
+            left: -20px;
+            transform: translateX(0);
+        }
+        .rabbit-bubble.show {
+            transform: translateY(-8px);
+        }
+        .rabbit-bubble::after {
+            left: 30px;
+            transform: none;
+        }
+        .rabbit-bubble::before {
+            left: 29px;
+            transform: none;
+        }
+        .bear-bubble {
+            top: -55px;
+            left: auto;
+            right: -20px;
+            transform: translateX(0);
+        }
+        .bear-bubble.show {
+            transform: translateY(-8px);
+        }
+        .bear-bubble::after {
+            left: auto;
+            right: 30px;
+            transform: none;
+        }
+        .bear-bubble::before {
+            left: auto;
+            right: 29px;
+            transform: none;
+        }
+        .hunger-bubble {
+            position: absolute;
+            top: -70px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #fff3cd;
+            padding: 6px 14px;
+            border-radius: 16px;
+            font-size: 12px;
+            color: #856404;
+            border: 2px solid #ffeaa7;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            opacity: 0;
+            transition: all 0.4s ease;
+            white-space: nowrap;
+            z-index: 20;
+            pointer-events: none;
+            animation: hungerFloat 2s ease-in-out infinite;
+        }
+        .hunger-bubble.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(-5px);
+        }
+        .hunger-bubble::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-top: 10px solid #fff3cd;
+        }
+        .hunger-bubble::before {
+            content: '';
+            position: absolute;
+            bottom: -11px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-left: 9px solid transparent;
+            border-right: 9px solid transparent;
+            border-top: 11px solid #ffeaa7;
+        }
+        @keyframes hungerFloat {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(-3px); }
+        }
+        .ui-area {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 900px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
+        .title-bar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 5px;
+        }
+        .title-text {
+            font-size: 24px;
+            color: #d4788c;
+            font-weight: bold;
+            text-shadow: 2px 2px 8px rgba(212, 120, 140, 0.3);
+        }
+        .title-icon { font-size: 28px; }
+        .main-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .miss-btn {
+            padding: 12px 40px;
+            background: linear-gradient(135deg, #f8a5c2 0%, #d4788c 100%);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            font-size: 16px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(212, 120, 140, 0.4);
+            transition: all 0.3s ease;
+            font-family: inherit;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .miss-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(212, 120, 140, 0.5);
+        }
+        .miss-btn:active { transform: translateY(0); }
+        .miss-btn .btn-heart {
+            width: 16px;
+            height: 16px;
+            position: relative;
+        }
+        .miss-btn .btn-heart::before,
+        .miss-btn .btn-heart::after {
+            content: '';
+            position: absolute;
+            width: 10px;
+            height: 16px;
+            background: white;
+            border-radius: 10px 10px 0 0;
+        }
+        .miss-btn .btn-heart::before {
+            transform: rotate(-45deg);
+            left: 0;
+        }
+        .miss-btn .btn-heart::after {
+            transform: rotate(45deg);
+            left: 6px;
+        }
+        .feed-btn {
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #a8e6cf 0%, #7bc8a4 100%);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            font-size: 16px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(124, 200, 164, 0.4);
+            transition: all 0.3s ease;
+            font-family: inherit;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .feed-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(124, 200, 164, 0.5);
+        }
+        .feed-btn:active { transform: translateY(0); }
+        .stats-area {
+            text-align: center;
+            padding: 12px 30px;
+            background: rgba(255,255,255,0.9);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,200,210,0.5);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            display: flex;
+            gap: 30px;
+            align-items: center;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .stat-item { text-align: center; }
+        .stat-label {
+            font-size: 11px;
+            color: #b8a0a8;
+            margin-bottom: 4px;
+        }
+        .stat-number {
+            font-size: 28px;
+            font-weight: bold;
+            color: #d4788c;
+            line-height: 1;
+        }
+        .stat-hearts {
+            font-size: 14px;
+            margin-top: 4px;
+            min-height: 24px;
+        }
+        .hint-text {
+            font-size: 12px;
+            color: #c8a8b0;
+            animation: hintPulse 2.5s ease-in-out infinite;
+        }
+        @keyframes hintPulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+        .history-area {
+            text-align: center;
+            max-width: 400px;
+            width: 100%;
+        }
+        .history-title {
+            font-size: 11px;
+            color: #d4b8c0;
+            margin-bottom: 6px;
+            letter-spacing: 1px;
+        }
+        .history-items {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 5px;
+        }
+        .history-item {
+            background: rgba(255,255,255,0.8);
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 10px;
+            color: #c098a0;
+            border: 1px solid rgba(255,200,210,0.3);
+            animation: itemAppear 0.4s ease-out;
+        }
+        @keyframes itemAppear {
+            0% { transform: scale(0.5); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .footer {
+            font-size: 10px;
+            color: #d4c0c8;
+            margin-top: 10px;
+        }
+        .intimacy-section {
+            width: 100%;
+            max-width: 400px;
+            background: rgba(255,255,255,0.9);
+            border-radius: 20px;
+            padding: 16px 24px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,200,210,0.5);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            text-align: center;
+        }
+        .intimacy-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .intimacy-label {
+            font-size: 13px;
+            color: #b8a0a8;
+            font-weight: bold;
+        }
+        .intimacy-value {
+            font-size: 20px;
+            font-weight: bold;
+            color: #d4788c;
+        }
+        .intimacy-bar-container {
+            width: 100%;
+            height: 14px;
+            background: #f0e0e5;
+            border-radius: 7px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .intimacy-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #f8a5c2, #d4788c, #c25a7a);
+            border-radius: 7px;
+            transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+        }
+        .intimacy-bar-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: barShine 2s infinite;
+        }
+        @keyframes barShine {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        .intimacy-milestones {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 8px;
+            padding: 0 2px;
+        }
+        .milestone {
+            font-size: 10px;
+            color: #d4b8c0;
+            position: relative;
+        }
+        .milestone::before {
+            content: '';
+            position: absolute;
+            top: -14px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 8px;
+            background: #e0c8d0;
+            border-radius: 1px;
+        }
+        .milestone.reached {
+            color: #d4788c;
+            font-weight: bold;
+        }
+        .milestone.reached::before {
+            background: #d4788c;
+        }
+        .sound-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #f8a5c2 0%, #d4788c 100%);
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(212, 120, 140, 0.4);
+            transition: all 0.3s ease;
+            z-index: 50;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .sound-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(212, 120, 140, 0.5);
+        }
+        .sound-btn.muted {
+            background: linear-gradient(135deg, #c0c0c0 0%, #a0a0a0 100%);
+        }
+        .sound-btn .sound-wave {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 2px solid rgba(255,255,255,0.5);
+            animation: soundWave 2s infinite;
+            pointer-events: none;
+        }
+        @keyframes soundWave {
+            0% { transform: scale(1); opacity: 0.5; }
+            100% { transform: scale(1.5); opacity: 0; }
+        }
+        .food-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .food-modal.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .food-modal-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(40, 20, 50, 0.6);
+            backdrop-filter: blur(8px);
+            z-index: 100;
+        }
+        .food-modal-content {
+            position: relative;
+            background: linear-gradient(180deg, #fff8f8 0%, #fff0f5 100%);
+            border-radius: 28px;
+            padding: 28px 24px 24px;
+            max-width: 400px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            transform: scale(0.7) translateY(30px);
+            transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 
+                0 20px 60px rgba(212, 120, 140, 0.3),
+                0 0 0 4px rgba(255, 255, 255, 0.8),
+                inset 0 2px 0 rgba(255,255,255,0.9);
+            z-index: 101;
+            border: 3px solid #ffd4e5;
+        }
+        .food-modal.show .food-modal-content {
+            transform: scale(1) translateY(0);
+        }
+        .food-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 2px dashed #ffd4e5;
+            position: relative;
+        }
+        .food-modal-header::after {
+            content: '🌿🌸🌿';
+            position: absolute;
+            bottom: -10px;
+            right: 12px;
+            font-size: 11px;
+            background: linear-gradient(180deg, #fff8f8 0%, #fff0f5 100%);
+            padding: 0 6px;
+            border-radius: 8px;
+            letter-spacing: 2px;
+        }
+        .food-modal-header-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .food-modal-title {
+            font-size: 22px;
+            font-weight: bold;
+            color: #d4788c;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-shadow: 1px 1px 2px rgba(212, 120, 140, 0.2);
+        }
+        .food-modal-title::before {
+            content: '';
+	    width: 50px;
+	    height: 50px;
+	    background-image: url(foodbox.png);
+	    background-size: contain;
+	    background-repeat: no-repeat;
+	    background-position: center;
+            animation: titleBounce 1.8s ease-in-out infinite;
+        }
+        .food-modal-subtitle {
+            font-size: 12px;
+            color: #c8a0a8;
+            letter-spacing: 0.5px;
+        }
+        .food-modal-subtitle::after {
+            content: '✨';
+            margin-left: 4px;
+        }
+        @keyframes titleBounce {
+            0%, 100% { transform: translateY(0) rotate(-3deg); }
+            25% { transform: translateY(-4px) rotate(3deg); }
+            50% { transform: translateY(0) rotate(-2deg); }
+            75% { transform: translateY(-2px) rotate(2deg); }
+        }
+        .food-modal-close {
+            background: linear-gradient(135deg, #ffe4ec, #ffd4e5);
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            font-size: 20px;
+            color: #d4788c;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px rgba(212, 120, 140, 0.2);
+        }
+        .food-modal-close:hover { 
+            transform: scale(1.1) rotate(90deg);
+            background: linear-gradient(135deg, #ffd4e5, #ffc0cb);
+            box-shadow: 0 4px 12px rgba(212, 120, 140, 0.3);
+        }
+        .food-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 14px;
+        }
+        .food-item {
+            border: 2.5px solid;
+            border-radius: 22px;
+            padding: 16px 10px 22px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.04);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 210px;
+        }
+        .food-item:hover {
+            transform: translateY(-6px) scale(1.04);
+            box-shadow: 
+                0 14px 35px var(--item-shadow, rgba(248, 165, 194, 0.3)),
+                0 0 0 3px var(--item-border, rgba(248, 165, 194, 0.15));
+            border-color: var(--item-border-color, #f8a5c2);
+        }
+        .food-item:hover .food-icon {
+            transform: scale(1.1) rotate(3deg);
+            filter: drop-shadow(0 6px 12px rgba(0,0,0,0.12));
+        }
+        .food-item:hover .food-icon-img {
+            animation: foodImgWiggle 0.6s ease-in-out;
+        }
+        .food-item:hover .card-deco {
+            opacity: 0.9;
+            transform: scale(1.1);
+        }
+        @keyframes foodImgWiggle {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(-6deg); }
+            75% { transform: rotate(6deg); }
+        }
+        .food-item:active {
+            transform: translateY(-2px) scale(0.98);
+        }
+        .food-item.disabled {
+            opacity: 0.35;
+            cursor: not-allowed;
+            filter: grayscale(0.6);
+        }
+        .food-item.disabled:hover {
+            transform: none;
+            box-shadow: none;
+        }
+        .food-item.disabled .food-icon {
+            filter: grayscale(0.8) brightness(0.7);
+            opacity: 0.6;
+        }
+        .food-item.disabled .food-icon-img {
+            filter: grayscale(0.8);
+        }
+        /* 调整偏低的卡片：草莓和蛋糕 */
+        .food-item.adjust-up .food-icon {
+            margin-top: 8px;
+        }
+        .food-item.adjust-up .food-info {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 72px;
+            position: relative;
+            z-index: 1;
+	    margin-top: 7px;
+        }
+        /* ========== CSS绘制的装饰元素 ========== */
+        .card-deco {
+            position: absolute;
+            pointer-events: none;
+            z-index: 0;
+            transition: all 0.4s ease;
+            opacity: 0.5;
+        }
+        .food-item:hover .card-deco {
+            opacity: 0.9;
+            transform: scale(1.1);
+        }
+        /* CSS爱心 */
+        .deco-heart {
+            width: 12px;
+            height: 12px;
+            background: #ff8fab;
+            transform: rotate(-45deg);
+            border-radius: 2px;
+        }
+        .deco-heart::before,
+        .deco-heart::after {
+            content: '';
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background: #ff8fab;
+            border-radius: 50%;
+        }
+        .deco-heart::before { top: -6px; left: 0; }
+        .deco-heart::after { top: 0; left: 6px; }
+        .deco-heart.pink, .deco-heart.pink::before, .deco-heart.pink::after { background: #ffb8d4; }
+        .deco-heart.peach, .deco-heart.peach::before, .deco-heart.peach::after { background: #ffc4a3; }
+        /* CSS星星（四角星） */
+        .deco-star {
+            width: 10px;
+            height: 10px;
+            background: #ffd166;
+            clip-path: polygon(50% 0%, 61% 35%, 100% 50%, 61% 65%, 50% 100%, 39% 65%, 0% 50%, 39% 35%);
+            animation: decoStarTwinkle 2s ease-in-out infinite;
+        }
+        .deco-star.small { width: 7px; height: 7px; }
+        .deco-star.white {
+            background: rgba(255,255,255,0.8);
+            clip-path: polygon(50% 0%, 61% 35%, 100% 50%, 61% 65%, 50% 100%, 39% 65%, 0% 50%, 39% 35%);
+        }
+        .deco-star.purple {
+            background: #c4b5fd;
+            clip-path: polygon(50% 0%, 61% 35%, 100% 50%, 61% 65%, 50% 100%, 39% 65%, 0% 50%, 39% 35%);
+        }
+        .deco-star.pink {
+            background: #ffb8d4;
+            clip-path: polygon(50% 0%, 61% 35%, 100% 50%, 61% 65%, 50% 100%, 39% 65%, 0% 50%, 39% 35%);
+        }
+        @keyframes decoStarTwinkle {
+            0%, 100% { opacity: 0.4; transform: scale(1); }
+            50% { opacity: 0.9; transform: scale(1.2); }
+        }
+        /* CSS花朵 */
+        .deco-flower {
+            width: 18px;
+            height: 18px;
+            position: relative;
+        }
+        .deco-flower::before {
+            content: '';
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: #ffb8d4;
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: -7px -2px 0 -1px #ffc4d6, 7px -2px 0 -1px #ffc4d6, -4px -6px 0 -1px #ffd4e5, 4px -6px 0 -1px #ffd4e5, 0 -8px 0 -2px #ffe0ec;
+            animation: flowerSway 3s ease-in-out infinite;
+        }
+        .deco-flower::after {
+            content: '';
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #fff0a0;
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1;
+        }
+        @keyframes flowerSway {
+            0%, 100% { transform: translate(-50%, -50%) rotate(0deg); }
+            50% { transform: translate(-50%, -50%) rotate(15deg); }
+        }
+        /* CSS蝴蝶结 */
+        .deco-bow {
+            width: 20px;
+            height: 14px;
+            position: relative;
+        }
+        .deco-bow::before {
+            content: '';
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #ff8fab;
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            left: 0;
+            top: 2px;
+            transform: rotate(-30deg);
+            box-shadow: inset -1px -1px 2px rgba(0,0,0,0.1);
+        }
+        .deco-bow::after {
+            content: '';
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #ff8fab;
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            right: 0;
+            top: 2px;
+            transform: rotate(30deg);
+            box-shadow: inset 1px -1px 2px rgba(0,0,0,0.1);
+        }
+        /* CSS弯月亮 */
+        .deco-moon {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            box-shadow: inset -4px -2px 0 0 #c4b5fd;
+            transform: rotate(-30deg);
+            animation: moonGlow 3s ease-in-out infinite;
+        }
+        @keyframes moonGlow {
+            0%, 100% { box-shadow: inset -4px -2px 0 0 #c4b5fd, 0 0 6px rgba(196,181,253,0.2); }
+            50% { box-shadow: inset -4px -2px 0 0 #d4c8ff, 0 0 12px rgba(196,181,253,0.4); }
+        }
+        /* CSS小圆点 */
+        .deco-dot {
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: rgba(255,200,150,0.4);
+        }
+        /* 限定标签 */
+        .limited-tag {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 5;
+            overflow: hidden;
+            border-radius: 20px 0 20px 0;
+            width: 52px;
+            height: 52px;
+        }
+        .limited-tag::before {
+            content: '';
+            position: absolute;
+            top: -26px;
+            left: -26px;
+            width: 52px;
+            height: 52px;
+            background: linear-gradient(135deg, #ff6b9d 0%, #ff8fab 100%);
+            transform: rotate(45deg);
+            z-index: 1;
+        }
+        .limited-tag span {
+            position: absolute;
+            top: 7px;
+            left: 2px;
+            font-size: 10px;
+            color: white;
+            font-weight: bold;
+            z-index: 2;
+            transform: rotate(-45deg);
+            letter-spacing: 1px;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.15);
+        }
+        .food-icon {
+            width: 90px;
+            height: 90px;
+            margin: 0 auto 10px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            animation: foodBounce 2.5s ease-in-out infinite;
+            animation-delay: var(--delay, 0s);
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.08));
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 1;
+            flex-shrink: 0;
+        }
+        .food-icon-img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            position: relative;
+            z-index: 1;
+            transition: all 0.3s ease;
+            max-height: 85px;
+        }
+        @keyframes foodBounce {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            25% { transform: translateY(-4px) rotate(-3deg); }
+            50% { transform: translateY(0) rotate(0deg); }
+            75% { transform: translateY(-2px) rotate(3deg); }
+        }
+        .food-info {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            height: 72px;
+            position: relative;
+            z-index: 1;
+        }
+        .food-name {
+            font-size: 16px;
+            color: #5a3d4a;
+            font-weight: bold;
+            letter-spacing: 1px;
+            position: relative;
+            z-index: 1;
+        }
+        .food-desc {
+            font-size: 11px;
+            color: #b8a0a8;
+            margin-top: 3px;
+            position: relative;
+            z-index: 1;
+            letter-spacing: 0.3px;
+        }
+        .food-bonus {
+            font-size: 13px;
+            color: #d4788c;
+            margin-top: 10px;
+            font-weight: bold;
+            padding: 6px 18px;
+            border-radius: 20px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            border: 1.5px solid;
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 1;
+            letter-spacing: 0.5px;
+        }
+        .food-bonus::before {
+            content: '💕';
+            font-size: 12px;
+        }
+        .food-item.disabled .food-bonus {
+            background: #f0f0f0 !important;
+            color: #ccc !important;
+            border-color: #e0e0e0 !important;
+        }
+        .food-item.disabled .food-bonus::before {
+            filter: grayscale(1);
+            opacity: 0.5;
+        }
+        /* 食物柜底部装饰条 */
+        .food-modal-footer-bar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 16px;
+            padding-top: 12px;
+            border-top: 1px dashed #ffd4e5;
+        }
+        .food-modal-footer-bar .footer-dot {
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: #ffd4e5;
+        }
+        .food-modal-footer-bar .footer-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 11px;
+            color: #c8a0a8;
+        }
+        .food-modal-footer-bar .footer-item img {
+            width: 16px;
+            height: 16px;
+            object-fit: contain;
+        }
+        .food-particle {
+            position: absolute;
+            font-size: 24px;
+            pointer-events: none;
+            z-index: 15;
+            animation: foodFloat 1.5s ease-out forwards;
+        }
+        @keyframes foodFloat {
+            0% { opacity: 1; transform: translateY(0) scale(1); }
+            50% { opacity: 1; transform: translateY(-30px) scale(1.2); }
+            100% { opacity: 0; transform: translateY(-60px) scale(0.5); }
+        }
+        @keyframes itemPopIn {
+            0% { opacity: 0; transform: scale(0.5) translateY(20px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        /* ========== 换装系统 ========== */
+        .dressup-btn {
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #ffd6e7 0%, #ffb3d1 100%);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            font-size: 16px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(255, 179, 209, 0.4);
+            transition: all 0.3s ease;
+            font-family: inherit;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .dressup-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 179, 209, 0.5);
+        }
+        .dressup-btn:active { transform: translateY(0); }
+        .dressup-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .dressup-modal.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .dressup-modal-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(40, 20, 50, 0.6);
+            backdrop-filter: blur(8px);
+            z-index: 100;
+        }
+        .dressup-modal-content {
+            position: relative;
+            background: linear-gradient(180deg, #fff8f8 0%, #fff0f5 100%);
+            border-radius: 28px;
+            padding: 24px 20px 20px;
+            max-width: 420px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            transform: scale(0.7) translateY(30px);
+            transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 20px 60px rgba(212, 120, 140, 0.3), 0 0 0 4px rgba(255, 255, 255, 0.8), inset 0 2px 0 rgba(255,255,255,0.9);
+            z-index: 101;
+            border: 3px solid #ffd4e5;
+        }
+        .dressup-modal.show .dressup-modal-content {
+            transform: scale(1) translateY(0);
+        }
+        .dressup-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 2px dashed #ffd4e5;
+            position: relative;
+        }
+        .dressup-modal-title {
+            font-size: 22px;
+            font-weight: bold;
+            color: #d4788c;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-shadow: 1px 1px 2px rgba(212, 120, 140, 0.2);
+        }
+        .dressup-modal-title::before {
+            content: '👗';
+            font-size: 24px;
+            animation: titleBounce 1.8s ease-in-out infinite;
+        }
+        .dressup-close {
+            background: linear-gradient(135deg, #ffe4ec, #ffd4e5);
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            font-size: 20px;
+            color: #d4788c;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px rgba(212, 120, 140, 0.2);
+        }
+        .dressup-close:hover {
+            transform: scale(1.1) rotate(90deg);
+            background: linear-gradient(135deg, #ffd4e5, #ffc0cb);
+            box-shadow: 0 4px 12px rgba(212, 120, 140, 0.3);
+        }
+        .dressup-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .dressup-tab {
+            padding: 6px 14px;
+            border-radius: 16px;
+            border: 2px solid #ffd4e5;
+            background: white;
+            color: #c8a0a8;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+        .dressup-tab:hover {
+            border-color: #f8a5c2;
+            color: #d4788c;
+        }
+        .dressup-tab.active {
+            background: linear-gradient(135deg, #f8a5c2 0%, #d4788c 100%);
+            color: white;
+            border-color: #d4788c;
+        }
+        .dressup-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+        .dressup-item {
+            background: linear-gradient(180deg, #ffffff 0%, #fff8f8 100%);
+            border: 2.5px solid #ffe4ec;
+            border-radius: 16px;
+            padding: 12px 6px 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+            overflow: visible;
+        }
+        .dressup-item:hover {
+            transform: translateY(-4px) scale(1.04);
+            border-color: #f8a5c2;
+            box-shadow: 0 10px 25px rgba(248, 165, 194, 0.25);
+        }
+        .dressup-item.selected {
+            border-color: #d4788c;
+            box-shadow: 0 0 0 3px rgba(212, 120, 140, 0.2), 0 8px 20px rgba(212, 120, 140, 0.2);
+        }
+        .dressup-item.locked {
+            opacity: 0.5;
+            cursor: not-allowed;
+            filter: grayscale(0.7);
+        }
+        .dressup-item.locked:hover {
+            transform: none;
+            box-shadow: none;
+            border-color: #ffe4ec;
+        }
+        .dressup-item-icon {
+            width: 48px;
+            height: 48px;
+            margin: 0 auto 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            animation: itemFloat 3s ease-in-out infinite;
+            animation-delay: var(--delay, 0s);
+        }
+        @keyframes itemFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-3px); }
+        }
+        .dressup-item-name {
+            font-size: 12px;
+            color: #6b4c5a;
+            font-weight: bold;
+        }
+        .dressup-item-req {
+            font-size: 10px;
+            color: #d4788c;
+            margin-top: 2px;
+        }
+        .dressup-item-equipped {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            width: 22px;
+            height: 22px;
+            background: linear-gradient(135deg, #a8e6cf, #7bc8a4);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            box-shadow: 0 2px 6px rgba(124, 200, 164, 0.4);
+            z-index: 5;
+        }
+        .dressup-item-lock {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 20px;
+            z-index: 3;
+        }
+        .dressup-preview {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            padding: 16px;
+            background: rgba(255,255,255,0.6);
+            border-radius: 20px;
+            margin-bottom: 16px;
+        }
+        .dressup-preview-rabbit {
+            width: 100px;
+            height: 100px;
+            position: relative;
+        }
+        .dressup-preview-rabbit img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        .dressup-accessory-overlay {
+            position: absolute;
+            font-size: 28px;
+            z-index: 10;
+            filter: drop-shadow(0 2px 3px rgba(0,0,0,0.15));
+            pointer-events: none;
+        }
+        .accessory-hat { top: -5px; left: 50%; transform: translateX(-50%); font-size: 22px; }
+        .accessory-glasses { top: 35%; left: 50%; transform: translateX(-50%); font-size: 18px; }
+        .accessory-neck { top: 55%; left: 50%; transform: translateX(-50%); font-size: 16px; }
+        .accessory-cheek { top: 40%; font-size: 12px; }
+        .accessory-cheek.left { left: 15%; }
+        .accessory-cheek.right { right: 15%; }
+        .accessory-head { top: 10%; left: 50%; transform: translateX(-50%); font-size: 20px; }
+        .dressup-hint {
+            text-align: center;
+            font-size: 12px;
+            color: #c8a0a8;
+            margin-top: 8px;
+        }
+        .rabbit-accessory {
+            position: absolute;
+            z-index: 12;
+            pointer-events: none;
+            font-size: 24px;
+            filter: drop-shadow(0 2px 3px rgba(0,0,0,0.15));
+        }
+        .rabbit-acc-hat { top: -8px; left: 50%; transform: translateX(-50%); font-size: 22px; }
+        .rabbit-acc-glasses { top: 30%; left: 50%; transform: translateX(-50%); font-size: 16px; }
+        .rabbit-acc-neck { top: 52%; left: 50%; transform: translateX(-50%); font-size: 15px; }
+        .rabbit-acc-cheek-left { top: 38%; left: 18%; font-size: 11px; }
+        .rabbit-acc-cheek-right { top: 38%; right: 18%; font-size: 11px; }
+        .rabbit-acc-head { top: 5%; left: 50%; transform: translateX(-50%); font-size: 18px; }
+        @media (max-width: 600px) {
+            .scene-container { aspect-ratio: 4/3; }
+            .rabbit-img { width: 120px; height: 120px; }
+            .bear-img { width: 120px; height: 120px; }
+            .title-text { font-size: 20px; }
+            .stats-number { font-size: 24px; }
+            .bear-wrapper.show { right: 28%; }
+            .rabbit-wrapper.face-right { transform: translateX(-80%) scale(1.05); }
+            .stats-area { gap: 15px; padding: 10px 20px; }
+            .intimacy-section { padding: 12px 16px; }
+            .intimacy-value { font-size: 18px; }
+            .food-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+            .food-item { padding: 14px 8px 12px; height: 190px; }
+            .food-icon { width: 70px; height: 70px; }
+            .food-info { height: 65px; }
+            .food-modal-title { font-size: 18px; }
+            .food-modal-subtitle { font-size: 11px; }
+            .dressup-grid { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+            .dressup-item { padding: 10px 4px 8px; }
+            .dressup-item-icon { width: 38px; height: 38px; font-size: 22px; }
+            .dressup-modal-title { font-size: 18px; }
+            .dressup-btn { padding: 10px 20px; font-size: 14px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="scene-container" id="sceneContainer">
+        <img src="bg_night.png" alt="背景" class="bg-image" id="bgImage">
+        <div class="time-badge" id="timeBadge">🌙 夜晚</div>
+        <div class="window-stars" id="windowStars"></div>
+        <div class="lamp-glow" id="lampGlow"></div>
+        <div class="mushroom-lamp-click" id="mushroomLampClick" title="点击开关灯"></div>
+        <div class="characters-area">
+            <div class="rabbit-wrapper state-idle" id="rabbitWrapper">
+                <div class="hunger-bubble" id="hungerBubble">🥕 我饿了...</div>
+                <div class="speech-bubble rabbit-bubble" id="rabbitBubble">我好想你呀~</div>
+                <img src="rabbit_idle.png" alt="海棠兔" class="rabbit-img" id="rabbitImg">
+            </div>
+            <div class="bear-wrapper" id="bearWrapper">
+                <div class="speech-bubble bear-bubble" id="bearBubble">我来陪你啦！</div>
+                <img src="bear_appear.png" alt="小熊" class="bear-img" id="bearImg">
+            </div>
+        </div>
+    </div>
+    <div class="ui-area">
+        <div class="title-bar">
+            <span class="title-icon">🐰</span>
+            <span class="title-text">想念兔兔</span>
+            <span class="title-icon">💕</span>
+        </div>
+        <div class="main-buttons">
+            <button class="miss-btn" id="missBtn">
+                <span class="btn-heart"></span>
+                点我想TA
+            </button>
+            <button class="feed-btn" id="feedBtn">
+                <span>🥕</span>
+                喂食
+            </button>
+            <button class="dressup-btn" id="dressupBtn">
+                <span>👗</span>
+                换装
+            </button>
+        </div>
+        <div class="stats-area">
+            <div class="stat-item">
+                <div class="stat-label">今天被想念了</div>
+                <div class="stat-number" id="count">0</div>
+                <div class="stat-hearts" id="hearts"></div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label">累计思念</div>
+                <div class="stat-number" id="totalCount">0</div>
+            </div>
+        </div>
+        <div class="intimacy-section" id="intimacySection">
+            <div class="intimacy-header">
+                <span class="intimacy-label">💕 亲密度</span>
+                <span class="intimacy-value" id="intimacyValue">0</span>
+            </div>
+            <div class="intimacy-bar-container">
+                <div class="intimacy-bar-fill" id="intimacyBarFill" style="width: 0%"></div>
+            </div>
+            <div class="intimacy-milestones">
+                <span class="milestone" data-req="0">0</span>
+                <span class="milestone" data-req="52">52</span>
+                <span class="milestone" data-req="100">100</span>
+                <span class="milestone" data-req="200">200</span>
+                <span class="milestone" data-req="365">365</span>
+                <span class="milestone" data-req="520">520</span>
+            </div>
+        </div>
+        <div class="hint-text" id="hint">✨ 点击小兔子或按钮表达思念 ✨</div>
+        <div class="history-area">
+            <div class="history-title">💭 思念记录</div>
+            <div class="history-items" id="historyItems"></div>
+        </div>
+        <div class="footer">made with 💕 for you</div>
+    </div>
+    <button class="sound-btn" id="soundBtn" title="背景音乐">
+        <span id="soundIcon">🎵</span>
+        <div class="sound-wave" id="soundWave"></div>
+    </button>
+    <div class="food-modal" id="foodModal">
+        <div class="food-modal-overlay" id="foodModalOverlay"></div>
+        <div class="food-modal-content">
+            <div class="food-modal-header">
+                <div class="food-modal-header-info">
+                    <span class="food-modal-title">兔兔草盒</span>
+                    <span class="food-modal-subtitle">快来投喂小兔吧，吃得饱饱超幸福</span>
+                </div>
+                <button class="food-modal-close" id="foodModalClose">&times;</button>
+            </div>
+            <div class="food-grid" id="foodGrid"></div>
+        </div>
+    </div>
+    <div class="dressup-modal" id="dressupModal">
+        <div class="dressup-modal-overlay" id="dressupModalOverlay"></div>
+        <div class="dressup-modal-content">
+            <div class="dressup-modal-header">
+                <span class="dressup-modal-title">兔兔衣橱</span>
+                <button class="dressup-close" id="dressupClose">&times;</button>
+            </div>
+            <div class="dressup-tabs" id="dressupTabs"></div>
+            <div class="dressup-grid" id="dressupGrid"></div>
+            <div class="dressup-hint" id="dressupHint">💡 点击装饰即可穿戴~ 灰色装饰需更高亲密度解锁</div>
+        </div>
+    </div>
+    <audio id="bgMusic" src="bgm.mp3" loop preload="auto"></audio>
+<script>
+        const rabbitImages = {
+            idle: ['rabbit_idle.png', '海棠兔角色形象.png'],
+            happy: 'rabbit_happy.png',
+            shy: 'rabbit_shy.png',
+            cuddle: 'rabbit_cuddle.png'
+        };
+        const bearImages = {
+            appear: 'bear_appear.png',
+            guard: 'bear_guard.png',
+            look: 'bear_look.png',
+            leave: 'bear_leave.png'
+        };
+        const timeBackgrounds = {
+            night: 'bg_night.png',
+            morning: 'bg_morning.png',
+            afternoon: 'bg_afternoon.png',
+            evening: 'bg_evening.png'
+        };
+        const timeLabels = {
+            night: { icon: '🌙', text: '夜晚' },
+            morning: { icon: '🌅', text: '清晨' },
+            afternoon: { icon: '☀️', text: '午后' },
+            evening: { icon: '🌇', text: '黄昏' }
+        };
+        const foods = [
+            { id: 'carrot', icon: 'carrot.png', name: '胡萝卜', desc: '兔子的最爱', bonus: 10, nightOnly: false, bgColor: 'linear-gradient(145deg, #FFF8F5 0%, #FFF0E8 100%)', borderColor: '#FFD4B8', shadowColor: 'rgba(255, 170, 100, 0.22)', accentColor: '#FF9E7D' },
+            { id: 'strawberry', icon: 'strawberry.png', name: '草莓', desc: '甜甜的奖励', bonus: 15, nightOnly: false, bgColor: 'linear-gradient(145deg, #FFF8FA 0%, #FFF0F5 100%)', borderColor: '#FFB8D0', shadowColor: 'rgba(255, 120, 160, 0.22)', accentColor: '#FF7BA8' },
+            { id: 'cake', icon: 'cake.png', name: '蛋糕', desc: '限定甜品', bonus: 20, nightOnly: false, bgColor: 'linear-gradient(145deg, #FFFBF5 0%, #FFF8F0 100%)', borderColor: '#FFE0B0', shadowColor: 'rgba(255, 190, 100, 0.22)', accentColor: '#FFB85C', limited: true },
+            { id: 'milk', icon: 'milk.png', name: '热牛奶', desc: '夜晚专用', bonus: 8, nightOnly: true, bgColor: 'linear-gradient(145deg, #F8F8FF 0%, #F0F0FF 100%)', borderColor: '#C8B8FF', shadowColor: 'rgba(160, 140, 255, 0.22)', accentColor: '#A090FF' }
+        ];
+        // ========== 换装装饰道具 ==========
+        const accessoryTypes = [
+            { id: 'all', name: '全部' },
+            { id: 'head', name: '头饰' },
+            { id: 'face', name: '面部' },
+            { id: 'neck', name: '颈饰' },
+            { id: 'cheek', name: '腮红' }
+        ];
+        const accessories = [
+            { id: 'flower_crown', name: '花环', type: 'head', icon: '🌸', req: 20, pos: 'head' },
+            { id: 'star_clip', name: '星星发夹', type: 'head', icon: '⭐', req: 50, pos: 'head' },
+            { id: 'bunny_ears', name: '兔耳饰', type: 'head', icon: '🐰', req: 100, pos: 'head' },
+            { id: 'crown', name: '小皇冠', type: 'head', icon: '👑', req: 200, pos: 'head' },
+            { id: 'sunny_hat', name: '太阳帽', type: 'head', icon: '👒', req: 365, pos: 'hat' },
+            { id: 'red_glasses', name: '红框眼镜', type: 'face', icon: '👓', req: 30, pos: 'glasses' },
+            { id: 'star_glasses', name: '星星眼镜', type: 'face', icon: '🕶️', req: 80, pos: 'glasses' },
+            { id: 'sunglasses', name: '酷酷墨镜', type: 'face', icon: '😎', req: 150, pos: 'glasses' },
+            { id: 'pink_scarf', name: '粉围巾', type: 'neck', icon: '🧣', req: 40, pos: 'neck' },
+            { id: 'bow_tie', name: '蝴蝶结', type: 'neck', icon: '🎀', req: 70, pos: 'neck' },
+            { id: 'star_neck', name: '星星项链', type: 'neck', icon: '✨', req: 120, pos: 'neck' },
+            { id: 'bell', name: '小铃铛', type: 'neck', icon: '🔔', req: 250, pos: 'neck' },
+            { id: 'blush_pink', name: '粉腮红', type: 'cheek', icon: '💗', req: 10, pos: 'cheek' },
+            { id: 'blush_star', name: '星星腮红', type: 'cheek', icon: '🌟', req: 60, pos: 'cheek' },
+            { id: 'blush_sparkle', name: '亮亮腮红', type: 'cheek', icon: '✨', req: 180, pos: 'cheek' }
+        ];
+        const rabbitWords = {
+            idle: ['我好想你呀~', '你什么时候来呢...', '今天也在等你', '耳朵都等耷拉啦'],
+            happy: ['你终于来啦！', '见到你超开心！', '眼睛都亮起来啦', '抱抱~', '你是最好的！'],
+            shy: ['小熊来陪我了呢...', '好害羞呀', '心里暖暖的', '有你在真好'],
+            cuddle: ['依偎在一起好幸福', '不想分开啦', '就这样一直在一起吧', '最温暖的怀抱'],
+            eating: ['好好吃呀~', '谢谢你的喂食', '吃饱了真开心', '最喜欢这个味道']
+        };
+        const bearWords = {
+            appear: ['我来陪你啦！', '兔子让我来看看你', '别担心，我来了', '一起度过美好时光吧'],
+            guard: ['我会一直守护你', '有我在，不孤单', '安静陪伴就好', '永远在你身边'],
+            look: ['兔子好可爱呀', '想你啦！', '看着你就幸福', '最喜欢你了'],
+            leave: ['要暂时离开啦...', '下次再见哦', '一直会想你的', '记得想我呀']
+        };
+        const hints = [
+            '✨ 点击小兔子表达思念 ✨',
+            '💕 小熊来陪伴兔子啦！',
+            '🥰 你们好甜蜜呀！',
+            '💖 兔子和小熊都被爱包围了！',
+            '💑 这是真爱呀！',
+            '🌟 思念已满溢出来啦！',
+            '💗 每一秒都在想念你~'
+        ];
+
+        const sceneContainer = document.getElementById('sceneContainer');
+        const bgImage = document.getElementById('bgImage');
+        const timeBadge = document.getElementById('timeBadge');
+        const windowStars = document.getElementById('windowStars');
+        const lampGlow = document.getElementById('lampGlow');
+        const mushroomLampClick = document.getElementById('mushroomLampClick');
+        const rabbitWrapper = document.getElementById('rabbitWrapper');
+        const rabbitImg = document.getElementById('rabbitImg');
+        const rabbitBubble = document.getElementById('rabbitBubble');
+        const hungerBubble = document.getElementById('hungerBubble');
+        const bearWrapper = document.getElementById('bearWrapper');
+        const bearImg = document.getElementById('bearImg');
+        const bearBubble = document.getElementById('bearBubble');
+        const countEl = document.getElementById('count');
+        const totalCountEl = document.getElementById('totalCount');
+        const heartsEl = document.getElementById('hearts');
+        const hintEl = document.getElementById('hint');
+        const historyItems = document.getElementById('historyItems');
+        const missBtn = document.getElementById('missBtn');
+        const feedBtn = document.getElementById('feedBtn');
+        const intimacyValue = document.getElementById('intimacyValue');
+        const intimacyBarFill = document.getElementById('intimacyBarFill');
+        const soundBtn = document.getElementById('soundBtn');
+        const soundIcon = document.getElementById('soundIcon');
+        const soundWave = document.getElementById('soundWave');
+        const bgMusic = document.getElementById('bgMusic');
+        const foodModal = document.getElementById('foodModal');
+        const foodModalOverlay = document.getElementById('foodModalOverlay');
+        const foodModalClose = document.getElementById('foodModalClose');
+        const foodGrid = document.getElementById('foodGrid');
+        const dressupBtn = document.getElementById('dressupBtn');
+        const dressupModal = document.getElementById('dressupModal');
+        const dressupModalOverlay = document.getElementById('dressupModalOverlay');
+        const dressupClose = document.getElementById('dressupClose');
+        const dressupTabs = document.getElementById('dressupTabs');
+        const dressupGrid = document.getElementById('dressupGrid');
+
+        let gameData = {
+            count: 0, totalCount: 0, intimacy: 0,
+            todayDate: '', lastVisitDate: '', consecutiveDays: 0,
+            soundEnabled: true, musicPlaying: false,
+            hungerLevel: 0, lastFeedTime: Date.now(),
+            unlockedAccessories: [], equippedAccessories: {}
+        };
+        let bearTimeout = null;
+        let lookTimeout = null;
+        let isBearHere = false;
+        let rabbitState = 'idle';
+        let bearState = '';
+        let hasClickedOnce = false;
+        let idleImageIndex = 0;
+        let isLookActive = false;
+        let currentTimePeriod = 'night';
+        let lampOn = true;
+
+        function saveGameData() {
+            try { localStorage.setItem('rabbitGameData', JSON.stringify(gameData)); }
+            catch (e) { console.log('localStorage not available'); }
+        }
+
+        function loadGameData() {
+            try {
+                const saved = localStorage.getItem('rabbitGameData');
+                if (saved) {
+                    const parsed = JSON.parse(saved);
+                    const today = new Date().toDateString();
+                    if (parsed.todayDate !== today) {
+                        parsed.count = 0;
+                        parsed.todayDate = today;
+                        if (parsed.lastVisitDate) {
+                            const lastDate = new Date(parsed.lastVisitDate);
+                            const todayDate = new Date();
+                            const diffDays = Math.floor((todayDate - lastDate) / (1000 * 60 * 60 * 24));
+                            if (diffDays === 1) parsed.consecutiveDays = (parsed.consecutiveDays || 0) + 1;
+                            else if (diffDays > 1) parsed.consecutiveDays = 1;
+                        } else { parsed.consecutiveDays = 1; }
+                    }
+                    parsed.lastVisitDate = new Date().toDateString();
+                    gameData = Object.assign({}, gameData, parsed);
+                } else {
+                    gameData.todayDate = new Date().toDateString();
+                    gameData.lastVisitDate = new Date().toDateString();
+                    gameData.consecutiveDays = 1;
+                }
+            } catch (e) {
+                gameData.todayDate = new Date().toDateString();
+                gameData.lastVisitDate = new Date().toDateString();
+                gameData.consecutiveDays = 1;
+            }
+            updateUI();
+        }
+
+        function getTimePeriod() {
+            const hour = new Date().getHours();
+            if (hour >= 6 && hour < 12) return 'morning';
+            if (hour >= 12 && hour < 18) return 'afternoon';
+            if (hour >= 18 && hour < 21) return 'evening';
+            return 'night';
+        }
+
+        function updateTimeBackground() {
+            const period = getTimePeriod();
+            currentTimePeriod = period;
+            bgImage.src = timeBackgrounds[period];
+            const label = timeLabels[period];
+            timeBadge.innerHTML = label.icon + ' ' + label.text;
+            if (period === 'night') windowStars.classList.add('show');
+            else windowStars.classList.remove('show');
+            if (lampOn) { lampGlow.classList.add('show'); lampGlow.classList.remove('off'); }
+            else { lampGlow.classList.remove('show'); lampGlow.classList.add('off'); }
+        }
+
+        function toggleLamp() {
+            lampOn = !lampOn;
+            if (lampOn) { lampGlow.classList.add('show'); lampGlow.classList.remove('off'); }
+            else { lampGlow.classList.remove('show'); lampGlow.classList.add('off'); }
+        }
+
+        function preloadImages() {
+            Object.values(rabbitImages).forEach(src => {
+                if (Array.isArray(src)) src.forEach(s => { const img = new Image(); img.src = s; });
+                else { const img = new Image(); img.src = src; }
+            });
+            Object.values(bearImages).forEach(src => { const img = new Image(); img.src = src; });
+            Object.values(timeBackgrounds).forEach(src => { const img = new Image(); img.src = src; });
+        }
+
+        function initWindowStars() {
+            for (let i = 0; i < 15; i++) {
+                const star = document.createElement('div');
+                star.className = 'star-twinkle';
+                star.style.left = (10 + Math.random() * 80) + '%';
+                star.style.top = (10 + Math.random() * 80) + '%';
+                star.style.animationDelay = Math.random() * 2 + 's';
+                star.style.animationDuration = (1.5 + Math.random() * 2) + 's';
+                windowStars.appendChild(star);
+            }
+        }
+
+        function setRabbitState(state, faceRight) {
+            rabbitWrapper.className = 'rabbit-wrapper state-' + state;
+            if (faceRight) rabbitWrapper.classList.add('face-right');
+            if (state === 'idle' && hasClickedOnce) {
+                idleImageIndex = 1 - idleImageIndex;
+                rabbitImg.src = rabbitImages.idle[idleImageIndex];
+            } else if (state === 'idle' && !hasClickedOnce) {
+                rabbitImg.src = rabbitImages.idle[0];
+            } else if (rabbitImages[state]) {
+                rabbitImg.src = rabbitImages[state];
+            }
+            rabbitState = state;
+        }
+
+        function setBearState(state) {
+            bearWrapper.className = 'bear-wrapper show state-' + state;
+            bearImg.src = bearImages[state];
+            bearState = state;
+        }
+
+        function addIntimacy(amount) {
+            var prevIntimacy = gameData.intimacy;
+            gameData.intimacy += amount;
+            saveGameData();
+            updateUI();
+            // 检查是否有新装饰解锁
+            if (gameData.intimacy > prevIntimacy) {
+                checkAccessoryUnlocks();
+                updateRabbitAccessories();
+            }
+        }
+
+        function updateUI() {
+            countEl.textContent = gameData.count;
+            totalCountEl.textContent = gameData.totalCount;
+            intimacyValue.textContent = gameData.intimacy;
+            let intimacyPercent = (gameData.intimacy / 520) * 100;
+            if (intimacyPercent > 100) intimacyPercent = 100;
+            if (intimacyPercent < 0) intimacyPercent = 0;
+            intimacyBarFill.style.width = intimacyPercent + '%';
+            document.querySelectorAll('.milestone').forEach(m => {
+                const req = parseInt(m.dataset.req);
+                if (gameData.intimacy >= req) m.classList.add('reached');
+                else m.classList.remove('reached');
+            });
+            let heartStr = '';
+            const fullHearts = Math.min(gameData.count, 12);
+            for (let i = 0; i < fullHearts; i++) heartStr += '💖';
+            if (gameData.count > 12) heartStr += ' +' + (gameData.count - 12);
+            heartsEl.textContent = heartStr;
+        }
+
+        function updateHunger() {
+            const now = Date.now();
+            const hoursSinceFeed = (now - gameData.lastFeedTime) / (1000 * 60 * 60);
+            gameData.hungerLevel = Math.min(5, Math.floor(hoursSinceFeed / 2));
+            if (gameData.hungerLevel >= 3 && rabbitState === 'idle') {
+                hungerBubble.classList.add('show');
+                hungerBubble.textContent = gameData.hungerLevel >= 4 ? '🥕 好饿呀...' : '🥕 我饿了...';
+            } else {
+                hungerBubble.classList.remove('show');
+            }
+        }
+
+        function showFoodModal() {
+            foodGrid.innerHTML = '';
+            const isNight = currentTimePeriod === 'night';
+            // 各卡片的装饰元素配置 [type(用div class), cssClasses, top, left, delay]
+            const decorations = {
+                carrot: [
+                    ['div', 'deco-heart peach', '10%', '10%', '0s'],
+                    ['div', 'deco-star', '8%', '78%', '0.3s'],
+                    ['div', 'deco-star small', '75%', '8%', '0.6s'],
+                    ['div', 'deco-star small white', '72%', '82%', '0.9s'],
+                    ['div', 'deco-heart pink', '50%', '5%', '1.2s']
+                ],
+                strawberry: [
+                    ['div', 'deco-flower', '8%', '78%', '0s'],
+                    ['div', 'deco-flower', '12%', '8%', '0.4s'],
+                    ['div', 'deco-flower', '70%', '85%', '0.8s'],
+                    ['div', 'deco-dot', '78%', '5%', '1.1s'],
+                    ['div', 'deco-heart pink', '45%', '88%', '1.4s']
+                ],
+                cake: [
+                    ['div', 'deco-bow', '12%', '72%', '0s'],
+                    ['div', 'deco-star', '8%', '18%', '0.3s'],
+                    ['div', 'deco-bow', '78%', '8%', '0.7s'],
+                    ['div', 'deco-star small', '75%', '80%', '1.0s'],
+                    ['div', 'deco-star small pink', '50%', '85%', '1.3s']
+                ],
+                milk: [
+                    ['div', 'deco-moon', '8%', '78%', '0s'],
+                    ['div', 'deco-star purple', '12%', '10%', '0.4s'],
+                    ['div', 'deco-moon', '75%', '8%', '0.8s'],
+                    ['div', 'deco-star purple small', '78%', '82%', '1.1s'],
+                    ['div', 'deco-moon', '48%', '6%', '1.4s']
+                ]
+            };
+            foods.forEach(function(food, index) {
+                const item = document.createElement('div');
+                item.className = 'food-item';
+                if (food.nightOnly && !isNight) item.classList.add('disabled');
+                item.style.setProperty('--delay', (index * 0.15) + 's');
+                item.style.setProperty('--item-shadow', food.shadowColor || 'rgba(248, 165, 194, 0.35)');
+                item.style.setProperty('--item-border', (food.shadowColor || 'rgba(248, 165, 194, 0.35)').replace('0.22)', '0.15)'));
+                item.style.setProperty('--item-border-color', food.borderColor || '#f8a5c2');
+                item.style.background = food.bgColor || 'linear-gradient(180deg, #ffffff 0%, #fff8f8 100%)';
+                item.style.borderColor = food.borderColor || '#ffe4ec';
+                item.style.animation = 'itemPopIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) ' + (index * 0.1) + 's both';
+                // 构建装饰元素HTML (CSS绘制的div元素)
+                let decoHTML = '';
+                const decos = decorations[food.id] || [];
+                decos.forEach(function(d) {
+                    decoHTML += '<' + d[0] + ' class="card-deco ' + d[1] + '" style="top:' + d[2] + ';left:' + d[3] + ';animation-delay:' + d[4] + ';"></' + d[0] + '>';
+                });
+                // 限定标签（所有卡片统一占位，保持对齐）
+                let limitedHTML = '<div class="limited-tag" style="opacity:0;pointer-events:none;"><span>限定</span></div>';
+                if (food.limited) {
+                    limitedHTML = '<div class="limited-tag"><span>限定</span></div>';
+                }
+                var adjustUpClass = (food.id === 'strawberry' || food.id === 'cake') ? ' adjust-up' : '';
+                item.className += adjustUpClass;
+                item.innerHTML = limitedHTML + decoHTML + '<div class="food-icon"><img src="' + food.icon + '" alt="' + food.name + '" class="food-icon-img"></div><div class="food-info"><div class="food-name">' + food.name + '</div><div class="food-desc">' + food.desc + '</div><div class="food-bonus" style="background: ' + food.bgColor + '; border-color: ' + food.borderColor + ';">+' + food.bonus + ' 亲密度</div></div>';
+                item.addEventListener('click', function() {
+                    if (!item.classList.contains('disabled')) feedRabbit(food);
+                });
+                foodGrid.appendChild(item);
+            });
+            foodModal.classList.add('show');
+        }
+
+        function hideFoodModal() { foodModal.classList.remove('show'); }
+
+        function feedRabbit(food) {
+            hideFoodModal();
+            gameData.hungerLevel = Math.max(0, gameData.hungerLevel - 2);
+            gameData.lastFeedTime = Date.now();
+            addIntimacy(food.bonus);
+            hungerBubble.classList.remove('show');
+            playEatSound();
+            setRabbitState('eating', false);
+            rabbitBubble.textContent = rabbitWords.eating[Math.floor(Math.random() * rabbitWords.eating.length)];
+            rabbitBubble.classList.add('show');
+            createFoodParticle(food.icon);
+            setTimeout(function() {
+                rabbitBubble.classList.remove('show');
+                setRabbitState('idle', false);
+            }, 3000);
+            saveGameData();
+        }
+
+        function createFoodParticle(icon) {
+            const rect = rabbitWrapper.getBoundingClientRect();
+            const sceneRect = sceneContainer.getBoundingClientRect();
+            const centerX = rect.left - sceneRect.left + rect.width / 2;
+            const centerY = rect.top - sceneRect.top + rect.height / 2;
+            for (let i = 0; i < 3; i++) {
+                setTimeout(function() {
+                    const particle = document.createElement('div');
+                    particle.className = 'food-particle';
+                    particle.innerHTML = '<img src="' + icon + '" alt="food" style="width:36px;height:36px;object-fit:contain;">';
+                    particle.style.left = (centerX + (Math.random() - 0.5) * 60) + 'px';
+                    particle.style.top = (centerY - 20) + 'px';
+                    sceneContainer.appendChild(particle);
+                    setTimeout(function() { particle.remove(); }, 1500);
+                }, i * 200);
+            }
+        }
+
+        function playEatSound() {
+            if (!gameData.soundEnabled) return;
+            try {
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = audioCtx.createOscillator();
+                const gainNode = audioCtx.createGain();
+                oscillator.connect(gainNode);
+                gainNode.connect(audioCtx.destination);
+                oscillator.type = 'sine';
+                oscillator.frequency.setValueAtTime(600, audioCtx.currentTime);
+                oscillator.frequency.exponentialRampToValueAtTime(800, audioCtx.currentTime + 0.1);
+                oscillator.frequency.exponentialRampToValueAtTime(500, audioCtx.currentTime + 0.2);
+                gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+                oscillator.start(audioCtx.currentTime);
+                oscillator.stop(audioCtx.currentTime + 0.3);
+            } catch (e) { console.log('Web Audio API not available'); }
+        }
+
+        function addHistory() {
+            const now = new Date();
+            const timeStr = now.getHours().toString().padStart(2, '0') + ':' + 
+                           now.getMinutes().toString().padStart(2, '0') + ':' +
+                           now.getSeconds().toString().padStart(2, '0');
+            const item = document.createElement('div');
+            item.className = 'history-item';
+            item.textContent = timeStr;
+            historyItems.insertBefore(item, historyItems.firstChild);
+            if (historyItems.children.length > 10) historyItems.removeChild(historyItems.lastChild);
+        }
+
+        function startBearLookCycle() {
+            if (!isBearHere || isLookActive) return;
+            isLookActive = true;
+            setBearState('look');
+            bearBubble.textContent = bearWords.look[Math.floor(Math.random() * bearWords.look.length)];
+            bearBubble.classList.add('show');
+            setTimeout(function() {
+                if (!isBearHere) { isLookActive = false; return; }
+                setBearState('guard');
+                bearBubble.classList.remove('show');
+                isLookActive = false;
+                setTimeout(function() { if (isBearHere) startBearLookCycle(); }, 2000 + Math.random() * 1000);
+            }, 2500);
+        }
+
+        function leaveBear() {
+            if (!isBearHere) return;
+            isLookActive = false;
+            if (lookTimeout) { clearTimeout(lookTimeout); lookTimeout = null; }
+            setBearState('leave');
+            bearBubble.textContent = bearWords.leave[Math.floor(Math.random() * bearWords.leave.length)];
+            bearBubble.classList.add('show');
+            setTimeout(function() {
+                bearWrapper.classList.add('leaving');
+                bearBubble.classList.remove('show');
+                setTimeout(function() {
+                    bearWrapper.classList.remove('show', 'leaving', 'state-leave');
+                    isBearHere = false;
+                    setRabbitState('idle', false);
+                    rabbitBubble.textContent = rabbitWords.idle[Math.floor(Math.random() * rabbitWords.idle.length)];
+                    rabbitBubble.classList.add('show');
+                    setTimeout(function() { rabbitBubble.classList.remove('show'); }, 2500);
+                }, 1000);
+            }, 1000);
+        }
+
+        function createPetal() {
+            const petal = document.createElement('div');
+            petal.className = 'petal';
+            petal.style.left = (Math.random() * 100) + '%';
+            petal.style.top = '-20px';
+            petal.style.width = (8 + Math.random() * 8) + 'px';
+            petal.style.height = (8 + Math.random() * 8) + 'px';
+            petal.style.animationDuration = (4 + Math.random() * 3) + 's';
+            petal.style.animationDelay = Math.random() * 2 + 's';
+            sceneContainer.appendChild(petal);
+            setTimeout(function() { petal.remove(); }, 7000);
+        }
+
+        function createHeart(x, y, direction) {
+            const heart = document.createElement('div');
+            heart.className = 'heart-particle';
+            heart.style.left = x + 'px';
+            heart.style.top = y + 'px';
+            const animations = ['heartFloatLeft', 'heartFloatRight', 'heartFloatCenter', 'heartFloatLeftUp', 'heartFloatRightUp'];
+            heart.style.animationName = animations[direction % animations.length];
+            sceneContainer.appendChild(heart);
+            setTimeout(function() { heart.remove(); }, 2500);
+        }
+
+        function createSparkle(x, y) {
+            const sparkle = document.createElement('div');
+            sparkle.className = 'sparkle';
+            sparkle.style.left = x + 'px';
+            sparkle.style.top = y + 'px';
+            sceneContainer.appendChild(sparkle);
+            setTimeout(function() { sparkle.remove(); }, 3000);
+        }
+
+        function initSound() {
+            if (gameData.soundEnabled === false) {
+                soundBtn.classList.add('muted');
+                soundIcon.textContent = '🔇';
+                soundWave.style.display = 'none';
+            }
+        }
+
+        function toggleSound() {
+            gameData.soundEnabled = !gameData.soundEnabled;
+            saveGameData();
+            if (gameData.soundEnabled) {
+                soundBtn.classList.remove('muted');
+                soundIcon.textContent = '🎵';
+                soundWave.style.display = 'block';
+                playMusic();
+            } else {
+                soundBtn.classList.add('muted');
+                soundIcon.textContent = '🔇';
+                soundWave.style.display = 'none';
+                stopMusic();
+            }
+        }
+
+        function playMusic() {
+            if (!gameData.soundEnabled) return;
+            bgMusic.volume = 0.3;
+            bgMusic.play().then(function() {
+                gameData.musicPlaying = true;
+            }).catch(function(e) {
+                console.log('Music autoplay blocked');
+            });
+        }
+
+        function stopMusic() {
+            bgMusic.pause();
+            gameData.musicPlaying = false;
+        }
+
+        function playClickSound() {
+            if (!gameData.soundEnabled) return;
+            try {
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = audioCtx.createOscillator();
+                const gainNode = audioCtx.createGain();
+                oscillator.connect(gainNode);
+                gainNode.connect(audioCtx.destination);
+                oscillator.type = 'sine';
+                oscillator.frequency.setValueAtTime(800, audioCtx.currentTime);
+                oscillator.frequency.exponentialRampToValueAtTime(1200, audioCtx.currentTime + 0.1);
+                gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
+                oscillator.start(audioCtx.currentTime);
+                oscillator.stop(audioCtx.currentTime + 0.15);
+            } catch (e) { console.log('Web Audio API not available'); }
+        }
+
+        function triggerMiss(x, y) {
+            gameData.count++;
+            gameData.totalCount++;
+            addIntimacy(1);
+            if (!hasClickedOnce) hasClickedOnce = true;
+            playClickSound();
+            if (gameData.soundEnabled && !gameData.musicPlaying) playMusic();
+            setRabbitState('happy', true);
+            rabbitBubble.textContent = rabbitWords.happy[Math.floor(Math.random() * rabbitWords.happy.length)];
+            rabbitBubble.classList.add('show');
+            setTimeout(function() {
+                rabbitBubble.classList.remove('show');
+                if (isBearHere) {
+                    setRabbitState('shy', true);
+                    rabbitBubble.textContent = rabbitWords.shy[Math.floor(Math.random() * rabbitWords.shy.length)];
+                    rabbitBubble.classList.add('show');
+                    setTimeout(function() {
+                        rabbitBubble.classList.remove('show');
+                        if (isBearHere) setRabbitState('cuddle', true);
+                    }, 2000);
+                } else {
+                    setRabbitState('idle', false);
+                }
+            }, 2500);
+            const rect = rabbitWrapper.getBoundingClientRect();
+            const sceneRect = sceneContainer.getBoundingClientRect();
+            const centerX = rect.left - sceneRect.left + rect.width / 2;
+            const centerY = rect.top - sceneRect.top + rect.height / 2;
+            for (let i = 0; i < 5; i++) {
+                setTimeout(function() { createHeart(centerX, centerY, i); }, i * 150);
+            }
+            for (let i = 0; i < 8; i++) {
+                setTimeout(function() {
+                    createSparkle(centerX + (Math.random() - 0.5) * 80, centerY + (Math.random() - 0.5) * 40);
+                }, i * 100);
+            }
+            for (let i = 0; i < 5; i++) {
+                setTimeout(function() { createPetal(); }, i * 300);
+            }
+            if (!isBearHere) {
+                isBearHere = true;
+                setBearState('appear');
+                setTimeout(function() { if (isBearHere) setBearState('guard'); }, 1200);
+                setTimeout(function() {
+                    if (isBearHere) {
+                        bearBubble.textContent = bearWords.guard[Math.floor(Math.random() * bearWords.guard.length)];
+                        bearBubble.classList.add('show');
+                    }
+                }, 1500);
+                setTimeout(function() { if (isBearHere) startBearLookCycle(); }, 3000);
+                if (bearTimeout) clearTimeout(bearTimeout);
+                bearTimeout = setTimeout(function() { leaveBear(); }, 12000);
+            } else {
+                if (bearTimeout) clearTimeout(bearTimeout);
+                bearTimeout = setTimeout(function() { leaveBear(); }, 12000);
+            }
+            const hintIndex = Math.min(Math.floor(gameData.count / 3), hints.length - 1);
+            hintEl.textContent = hints[hintIndex];
+            addHistory();
+        }
+
+        rabbitWrapper.addEventListener('click', function(e) {
+            e.stopPropagation();
+            triggerMiss(e.clientX, e.clientY);
+        });
+
+        missBtn.addEventListener('click', function(e) {
+            const rect = rabbitWrapper.getBoundingClientRect();
+            triggerMiss(rect.left + rect.width / 2, rect.top + rect.height / 2);
+        });
+
+        mushroomLampClick.addEventListener('click', toggleLamp);
+        soundBtn.addEventListener('click', toggleSound);
+        feedBtn.addEventListener('click', showFoodModal);
+        foodModalOverlay.addEventListener('click', hideFoodModal);
+        foodModalClose.addEventListener('click', hideFoodModal);
+        dressupBtn.addEventListener('click', showDressupModal);
+        dressupModalOverlay.addEventListener('click', hideDressupModal);
+        dressupClose.addEventListener('click', hideDressupModal);
+
+
+        // ========== 换装系统函数 ==========
+        let currentDressupTab = 'all';
+        function initDefaultAccessories() {
+            // 初始解锁粉腮红（最低门槛）
+            if (!gameData.unlockedAccessories || gameData.unlockedAccessories.length === 0) {
+                gameData.unlockedAccessories = ['blush_pink'];
+                gameData.equippedAccessories = { cheek: 'blush_pink' };
+            }
+        }
+        function checkAccessoryUnlocks() {
+            let newUnlock = false;
+            accessories.forEach(function(acc) {
+                if (gameData.intimacy >= acc.req && !gameData.unlockedAccessories.includes(acc.id)) {
+                    gameData.unlockedAccessories.push(acc.id);
+                    newUnlock = true;
+                }
+            });
+            if (newUnlock) {
+                saveGameData();
+                // 如果换装界面打开，刷新显示
+                if (dressupModal.classList.contains('show')) {
+                    renderDressupGrid();
+                }
+            }
+        }
+        function showDressupModal() {
+            initDefaultAccessories();
+            checkAccessoryUnlocks();
+            renderDressupTabs();
+            renderDressupGrid();
+            dressupModal.classList.add('show');
+        }
+        function hideDressupModal() { dressupModal.classList.remove('show'); }
+        function renderDressupTabs() {
+            dressupTabs.innerHTML = '';
+            accessoryTypes.forEach(function(tab) {
+                const btn = document.createElement('button');
+                btn.className = 'dressup-tab' + (tab.id === currentDressupTab ? ' active' : '');
+                btn.textContent = tab.name;
+                btn.addEventListener('click', function() {
+                    currentDressupTab = tab.id;
+                    renderDressupTabs();
+                    renderDressupGrid();
+                });
+                dressupTabs.appendChild(btn);
+            });
+        }
+        function renderDressupGrid() {
+            dressupGrid.innerHTML = '';
+            const filtered = currentDressupTab === 'all'
+                ? accessories
+                : accessories.filter(function(a) { return a.type === currentDressupTab; });
+            filtered.forEach(function(acc, index) {
+                const isUnlocked = gameData.unlockedAccessories.includes(acc.id);
+                const isEquipped = gameData.equippedAccessories[acc.pos] === acc.id;
+                const item = document.createElement('div');
+                item.className = 'dressup-item' + (isEquipped ? ' selected' : '') + (isUnlocked ? '' : ' locked');
+                item.style.setProperty('--delay', (index * 0.1) + 's');
+                let innerHTML = '<div class="dressup-item-icon">' + acc.icon + '</div>' +
+                    '<div class="dressup-item-name">' + acc.name + '</div>';
+                if (isUnlocked) {
+                    innerHTML += '<div class="dressup-item-req">已解锁</div>';
+                    if (isEquipped) {
+                        innerHTML += '<div class="dressup-item-equipped">✓</div>';
+                    }
+                } else {
+                    innerHTML += '<div class="dressup-item-req">💕 ' + acc.req + '解锁</div>';
+                    innerHTML += '<div class="dressup-item-lock">🔒</div>';
+                }
+                item.innerHTML = innerHTML;
+                if (isUnlocked) {
+                    item.addEventListener('click', function() { toggleAccessory(acc); });
+                }
+                dressupGrid.appendChild(item);
+            });
+        }
+        function toggleAccessory(acc) {
+            const current = gameData.equippedAccessories[acc.pos];
+            if (current === acc.id) {
+                // 取消穿戴
+                delete gameData.equippedAccessories[acc.pos];
+            } else {
+                // 穿戴
+                gameData.equippedAccessories[acc.pos] = acc.id;
+            }
+            saveGameData();
+            renderDressupGrid();
+            updateRabbitAccessories();
+        }
+        function updateRabbitAccessories() {
+            // 移除所有已存在的装饰元素
+            document.querySelectorAll('.rabbit-accessory').forEach(function(el) { el.remove(); });
+            // 添加当前装备的装饰
+            const accMap = {};
+            accessories.forEach(function(a) { accMap[a.id] = a; });
+            const equipped = gameData.equippedAccessories || {};
+            Object.keys(equipped).forEach(function(pos) {
+                const accId = equipped[pos];
+                const acc = accMap[accId];
+                if (!acc) return;
+                const el = document.createElement('div');
+                el.className = 'rabbit-accessory';
+                // 根据位置设置class
+                if (pos === 'hat') el.classList.add('rabbit-acc-hat');
+                else if (pos === 'glasses') el.classList.add('rabbit-acc-glasses');
+                else if (pos === 'neck') el.classList.add('rabbit-acc-neck');
+                else if (pos === 'head') el.classList.add('rabbit-acc-head');
+                else if (pos === 'cheek') {
+                    // 腮红左右两边各一个
+                    const left = document.createElement('div');
+                    left.className = 'rabbit-accessory rabbit-acc-cheek-left';
+                    left.textContent = acc.icon;
+                    rabbitWrapper.appendChild(left);
+                    const right = document.createElement('div');
+                    right.className = 'rabbit-accessory rabbit-acc-cheek-right';
+                    right.textContent = acc.icon;
+                    rabbitWrapper.appendChild(right);
+                    return;
+                }
+                el.textContent = acc.icon;
+                rabbitWrapper.appendChild(el);
+            });
+        }
+        function init() {
+            preloadImages();
+            initWindowStars();
+            loadGameData();
+            initDefaultAccessories();
+            updateTimeBackground();
+            updateHunger();
+            initSound();
+            updateRabbitAccessories();
+            setInterval(updateTimeBackground, 60000);
+            setInterval(function() { if (Math.random() > 0.7) createPetal(); }, 2000);
+            setInterval(updateHunger, 30000);
+        }
+
+        init();
+    </script>
+</body>
+</html>
